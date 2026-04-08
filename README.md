@@ -10,7 +10,7 @@ Y al final hice una **demo práctica** del sistema con casos clínicos simulados
 
 La conclusión general es que **sí es viable construir una prueba de concepto de predicción temprana de AKI con datos hospitalarios estructurados**, pero todavía **no está listo para producción clínica**. Haría falta más muestra, más casos positivos, validación externa y una optimización más profunda del modelo. Si quieres, te preparo también una versión de **1 minuto hablada**, como para decírselo directamente.
 
-===========================================================================================================================================================================================
+========================================================================================================================================================================================
 La regresión logística es un modelo lineal y más simple e interpretable. Lo que hace es calcular cómo cada variable empuja la predicción hacia mayor o menor probabilidad del evento, en este caso AKI. Sirve muy bien como baseline porque se entiende fácil y permite ver el peso de cada predictor.
 
 El Random Forest es un modelo no lineal basado en muchos árboles de decisión. En lugar de buscar una relación lineal entre variables y resultado, combina muchas reglas y particiones de los datos. Eso le permite captar patrones más complejos, pero a cambio es menos transparente que la regresión logística.
