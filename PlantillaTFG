@@ -1,0 +1,717 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% PLANTILLA LATEX PARA TRABAJO FIN DE GRADO
+%% Universidad Camilo José Cela
+%% Facultad de Tecnología y Emprendimiento
+%% Grado en Ingeniería Informática Biomédica
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt, a4paper, oneside]{report}
+
+%% ==================== PAQUETES ==================== %%
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish, es-tabla]{babel}
+\usepackage{mathptmx}                    % Fuente Times New Roman
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{enumitem}
+\usepackage{tocloft}
+\usepackage{appendix}
+\usepackage{pdfpages}
+\usepackage{csquotes}
+\usepackage[backend=biber, style=apa, sorting=nyt]{biblatex}
+\DeclareLanguageMapping{spanish}{spanish-apa}
+\usepackage{etoolbox}
+\usepackage{ragged2e}
+\usepackage{microtype}
+\usepackage{lastpage}
+
+%% ==================== DATOS DEL TFG ==================== %%
+\newcommand{\tituloes}{DESARROLLO DE UN MODELO DE INTELIGENCIA ARTIFICIAL PARA LA PREDICCIÓN TEMPRANA DE LESIÓN RENAL AGUDA UTILIZANDO DATOS CLÍNICOS HOSPITALARIOS}
+\newcommand{\tituloen}{DEVELOPMENT OF AN ARTIFICIAL INTELLIGENCE MODEL FOR EARLY PREDICTION OF ACUTE KIDNEY INJURY USING HOSPITAL CLINICAL DATA}
+\newcommand{\alumno}{Isabella Cristancho}
+\newcommand{\emailalumno}{isabella.cristancho@alumno.ucjc.edu}
+\newcommand{\grado}{Grado en Ingeniería Informática Biomédica}
+\newcommand{\cursoacademico}{Curso académico 2022-2026}
+\newcommand{\tutor}{Xavier Tarrago}
+\newcommand{\facultad}{Facultad de Tecnología y Emprendimiento}
+\newcommand{\universidad}{Universidad Camilo José Cela}
+
+%% Ruta al logo (ajustar según tu estructura de carpetas)
+\newcommand{\logopath}{img/logoUCJC.png}
+
+%% ==================== CONFIGURACIÓN DE PÁGINA ==================== %%
+\geometry{
+    a4paper,
+    left=3cm,
+    right=2.5cm,
+    top=2cm,
+    bottom=2.5cm,
+    headheight=28pt,
+    headsep=10pt,
+    footskip=30pt
+}
+
+%% Interlineado 1.5
+\onehalfspacing
+
+%% ==================== COLORES INSTITUCIONALES ==================== %%
+\definecolor{ucjcgranate}{RGB}{128, 0, 64}    % Color granate UCJC
+\definecolor{ucjcgray}{RGB}{128, 128, 128}
+\definecolor{linkblue}{RGB}{0, 0, 128}
+
+%% ==================== CONFIGURACIÓN DE HYPERREF ==================== %%
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=ucjcgranate,
+    urlcolor=linkblue,
+    bookmarksnumbered=true,
+    bookmarksopen=true,
+    pdfauthor={\alumno},
+    pdftitle={\tituloes},
+    pdfsubject={Trabajo Fin de Grado},
+    pdfkeywords={Inteligencia Artificial, Lesión Renal Aguda, Machine Learning, Predicción Clínica}
+}
+
+%% ==================== CONFIGURACIÓN DE TÍTULOS ==================== %%
+\titleformat{\chapter}[hang]
+    {\normalfont\bfseries\LARGE}
+    {\thechapter.}
+    {0.5em}
+    {}
+\titlespacing*{\chapter}{0pt}{0pt}{15pt}
+
+\titleformat{\section}
+    {\normalfont\bfseries\large}
+    {\thesection}
+    {1em}
+    {}
+\titlespacing*{\section}{0pt}{10pt}{5pt}
+
+\titleformat{\subsection}
+    {\normalfont\bfseries\normalsize}
+    {\thesubsection}
+    {1em}
+    {}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+
+\titleformat{\subsubsection}
+    {\normalfont\itshape\normalsize}
+    {\thesubsubsection}
+    {1em}
+    {}
+
+%% ==================== ENCABEZADOS Y PIES DE PÁGINA ==================== %%
+
+%% Estilo principal para páginas del documento
+\fancypagestyle{tfgstyle}{
+    \fancyhf{} % Limpiar todo
+    %% ENCABEZADO
+    % Logo a la izquierda
+    \fancyhead[L]{\includegraphics[height=1cm]{\logopath}}
+    % Texto centrado
+    \fancyhead[C]{\textbf{TRABAJO FIN DE GRADO}}
+    % Nada a la derecha del encabezado
+    \fancyhead[R]{}
+    % Línea debajo del encabezado
+    \renewcommand{\headrulewidth}{1pt}
+    %% PIE DE PÁGINA
+    % Texto a la izquierda
+    \fancyfoot[L]{TRABAJO FIN DE GRADO}
+    % Número de página a la derecha
+    \fancyfoot[R]{\thepage}
+    % Línea encima del pie
+    \renewcommand{\footrulewidth}{1pt}
+}
+
+%% Estilo para primera página de capítulos (plain)
+\fancypagestyle{plain}{
+    \fancyhf{}
+    %% ENCABEZADO
+    \fancyhead[L]{\includegraphics[height=1cm]{\logopath}}
+    \fancyhead[C]{\textbf{TRABAJO FIN DE GRADO}}
+    \fancyhead[R]{}
+    \renewcommand{\headrulewidth}{1pt}
+    %% PIE DE PÁGINA
+    \fancyfoot[L]{TRABAJO FIN DE GRADO}
+    \fancyfoot[R]{\thepage}
+    \renewcommand{\footrulewidth}{1pt}
+}
+
+%% Estilo vacío para portada y páginas especiales
+\fancypagestyle{empty}{
+    \fancyhf{}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0pt}
+}
+
+%% Aplicar estilo principal por defecto
+\pagestyle{tfgstyle}
+
+%% ==================== CONFIGURACIÓN DE ÍNDICES ==================== %%
+\renewcommand{\cftchapfont}{\bfseries}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsubsecfont}{\normalfont}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+
+% Reduce el espacio enorme antes y después del título de los índices
+\setlength{\cftbeforetoctitleskip}{0pt}
+\setlength{\cftaftertoctitleskip}{12pt}
+\setlength{\cftbeforeloftitleskip}{0pt}
+\setlength{\cftafterloftitleskip}{12pt}
+\setlength{\cftbeforelottitleskip}{0pt}
+\setlength{\cftafterlottitleskip}{12pt}
+
+%% ==================== CONFIGURACIÓN DE FIGURAS Y TABLAS ==================== %%
+\captionsetup{
+    font=small,
+    labelfont=bf,
+    format=hang,
+    justification=justified
+}
+
+\captionsetup[table]{position=above}
+\captionsetup[figure]{position=below}
+
+%% ==================== CONFIGURACIÓN DE CÓDIGO ==================== %%
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{ucjcgray},
+    keywordstyle=\color{ucjcgranate}\bfseries,
+    commentstyle=\color{ucjcgray}\itshape,
+    stringstyle=\color{red!60!black},
+    showstringspaces=false,
+    tabsize=4,
+    captionpos=b,
+    xleftmargin=2em,
+    framexleftmargin=1.5em
+}
+
+%% ==================== CONFIGURACIÓN DE LISTAS ==================== %%
+\setlist[itemize]{nosep, leftmargin=*}
+\setlist[enumerate]{nosep, leftmargin=*}
+
+%% ==================== BIBLIOGRAFÍA ==================== %%
+\addbibresource{referencias.bib}  % Archivo de bibliografía
+
+%% ==================== COMANDOS PERSONALIZADOS ==================== %%
+\newcommand{\nota}[1]{\textcolor{red}{\textbf{[NOTA: #1]}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% INICIO DEL DOCUMENTO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%% ==================== PORTADA ==================== %%
+\begin{titlepage}
+    \thispagestyle{empty}
+    \begin{center}
+        
+        %% Logo de la Universidad
+        \includegraphics[width=8cm]{\logopath}
+        
+        \vspace{1cm}
+        
+        {\Large\bfseries TRABAJO FIN DE GRADO}
+        
+        \vspace{0.5cm}
+        
+        \rule{\textwidth}{1.5pt}
+        
+        \vspace{1cm}
+        
+        {\large\MakeUppercase{\grado}}
+        
+        \vspace{1.5cm}
+        
+        {\Large\bfseries TRABAJO FIN DE GRADO}
+        
+        \vspace{1cm}
+        
+        {\LARGE\bfseries\color{ucjcgranate}
+        \begin{spacing}{1.2}
+            \tituloes
+        \end{spacing}
+        }
+        
+        \vspace{2cm}
+        
+        \begin{tabular}{rl}
+            \textbf{Autor:} & \alumno \\[0.5cm]
+            \textbf{Director:} & \tutor \\
+        \end{tabular}
+        
+        \vfill
+        
+        {\large Madrid, junio de 2026}
+        
+        \vspace{1cm}
+        
+        \rule{\textwidth}{1.5pt}
+        
+        \vspace{0.5cm}
+        
+        {\normalsize\facultad}\\[0.2cm]
+        {\normalsize\universidad}
+        
+    \end{center}
+\end{titlepage}
+
+%% --- Página en blanco después de portada ---
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\newpage
+
+%% --- RESUMEN ---
+\chapter*{Resumen}
+\addcontentsline{toc}{chapter}{Resumen}
+
+\textit{La lesión renal aguda es una complicación frecuente en hospitales que se asocia con mayor mortalidad, estancias más largas y costes más altos. Este TFG desarrolla un modelo de inteligencia artificial para predecir de forma temprana qué pacientes tienen riesgo de desarrollar esta complicación, usando datos clínicos de un hospital real. El trabajo parte de la base de datos Doctoris de HM Hospitales, de donde se extraen variables demográficas, analíticas y farmacológicas. Tras un proceso de limpieza y preparación, se entrenan dos modelos (regresión logística y Random Forest) para predecir si un paciente desarrollará lesión renal aguda en las 48 horas siguientes al ingreso. Los resultados muestran que es posible capturar señal predictiva útil, siendo la creatinina basal el predictor más consistente. Aunque el modelo constituye una prueba de concepto y no está listo para uso clínico, sienta las bases para futuras mejoras con más datos y validación externa.}
+
+\vspace{1cm}
+
+\textbf{Palabras clave:} Inteligencia Artificial, Lesión Renal Aguda, Machine Learning, Predicción Clínica, Datos Hospitalarios, XGBoost.
+
+%% --- ABSTRACT ---
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+\textit{Insert here the abstract of the Final Degree Project translated into English.}
+
+\textit{Recommended length between 250 and 300 words maximum.}
+
+\vspace{1cm}
+
+\textbf{Keywords:} Artificial Intelligence, Acute Kidney Injury, Machine Learning, Clinical Prediction, Hospital Data, XGBoost.
+
+%% --- AGRADECIMIENTOS (opcional) ---
+\chapter*{Agradecimientos}
+\addcontentsline{toc}{chapter}{Agradecimientos}
+
+\textit{Sección opcional para expresar agradecimientos a las personas e instituciones que han contribuido al desarrollo de este trabajo.}
+\clearpage
+
+%% --- ÍNDICE GENERAL ---
+\tableofcontents
+\clearpage
+
+%% --- ÍNDICE DE FIGURAS ---
+\newpage
+\listoffigures
+\addcontentsline{toc}{chapter}{Índice de Figuras}
+
+%% --- ÍNDICE DE TABLAS ---
+\newpage
+\listoftables
+\addcontentsline{toc}{chapter}{Índice de Tablas}
+
+%% --- ÍNDICE DE CÓDIGO (opcional) ---
+%% \lstlistoflistings
+%% \addcontentsline{toc}{chapter}{Índice de Código}
+
+%% ==================== CONTENIDO PRINCIPAL ==================== %%
+\newpage
+\pagenumbering{arabic}
+
+%% --- CAPÍTULO 1: INTRODUCCIÓN ---
+\chapter{Introducción}
+\label{chap:introduccion}
+
+Este apartado resulta esencial para indicar los antecedentes del tema seleccionado para desarrollar el trabajo fin de grado.
+
+\section{Justificación e interés académico}
+\label{sec:justificacion_interes}
+
+\textit{Desarrollar la justificación e interés académico del tema.}
+
+\section{Antecedentes}
+\label{sec:antecedentes}
+
+\textit{Resumen de los antecedentes más relevantes del campo de estudio.}
+
+\section{Objetivos}
+\label{sec:objetivos_intro}
+
+\subsection{Objetivo general}
+\label{subsec:objetivo_general}
+
+\textit{Describir el objetivo general del trabajo.}
+
+\subsection{Objetivos específicos}
+\label{subsec:objetivos_especificos}
+
+\begin{enumerate}
+    \item Objetivo específico 1.
+    \item Objetivo específico 2.
+    \item Objetivo específico 3.
+\end{enumerate}
+
+\section{Metodología}
+\label{sec:metodologia_intro}
+
+\textit{Breve descripción de la metodología seguida.}
+
+\section{Estructura del trabajo}
+\label{sec:estructura}
+
+\textit{Descripción de la estructura del documento.}
+
+%% --- CAPÍTULO 2: MARCO TEÓRICO ---
+\chapter{Marco Teórico}
+\section{Lesión renal aguda: definición y criterios diagnósticos}
+
+La lesión renal aguda, conocida por sus siglas en inglés AKI (Acute Kidney Injury), es un síndrome clínico que se caracteriza por una disminución brusca de la función renal. Durante décadas se empleó el término "insuficiencia renal aguda", pero la comunidad nefrológica ha ido abandonándolo progresivamente porque transmite la idea de un fallo completo del órgano, cuando en realidad muchos pacientes presentan deterioros más sutiles que también tienen consecuencias clínicas relevantes \parencite{kdigo2012aki}.
+
+Uno de los problemas históricos en este campo ha sido la falta de una definición estandarizada. Hasta principios de los años 2000, la literatura recogía más de 30 definiciones distintas de lo que constituía un "fallo renal agudo", lo que dificultaba enormemente comparar estudios entre sí. Esta situación cambió en 2004, cuando el grupo ADQI (Acute Dialysis Quality Initiative) propuso los criterios RIFLE, un acrónimo que recoge cinco categorías de gravedad creciente: Riesgo, Injuria, Fallo, Pérdida y Enfermedad renal terminal. Por primera vez se disponía de un sistema de clasificación basado en cambios objetivos en la creatinina sérica y en el volumen de orina.
+
+Tres años después, la red AKIN (Acute Kidney Injury Network) introdujo una modificación importante: añadió como criterio diagnóstico un incremento absoluto de creatinina de al menos 0,3 mg/dL en un periodo de 48 horas. Este umbral, aparentemente pequeño, se incluyó tras comprobarse en varios estudios que elevaciones tan modestas ya se asociaban con peores resultados clínicos, incluyendo mayor mortalidad hospitalaria \parencite{khwaja2012kdigo}(Khwaja, 2012).
+
+La síntesis definitiva llegó en 2012 con las guías KDIGO (Kidney Disease: Improving Global Outcomes), que son las que se utilizan en la actualidad y las que he empleado en este trabajo. Según estos criterios, se diagnostica AKI cuando se cumple cualquiera de las siguientes condiciones:
+
+- Un aumento de la creatinina sérica igual o superior a 0,3 mg/dL en un plazo de 48 horas.
+- Un aumento de la creatinina sérica igual o superior a 1,5 veces el valor basal, presumiblemente ocurrido en los 7 días previos.
+- Un volumen de orina inferior a 0,5 mL/kg/hora durante al menos 6 horas.
+
+Las guías KDIGO también establecen tres estadios de gravedad. El estadio 1 corresponde al cumplimiento mínimo de los criterios; el estadio 2 implica un aumento de creatinina entre 2 y 3 veces el valor basal; y el estadio 3 se reserva para incrementos superiores a 3 veces el basal, creatininas por encima de 4 mg/dL con un aumento agudo de al menos 0,5 mg/dL, o la necesidad de terapia de reemplazo renal.
+
+Un aspecto que merece atención es la determinación del valor basal de creatinina. En la práctica clínica, no siempre se dispone de una analítica previa del paciente, lo que obliga a recurrir a estimaciones. Las guías sugieren que, en ausencia de datos, se puede asumir una tasa de filtrado glomerular de 75 mL/min/1,73 m² y calcular hacia atrás la creatinina esperada según edad y sexo. Sin embargo, este método tiene limitaciones evidentes y puede infraestimar la incidencia real de AKI en poblaciones con enfermedad renal crónica subyacente no diagnosticada \parencite{palevsky2013kdoqi}.
+
+En el presente trabajo, he optado por definir la AKI utilizando el criterio de incremento absoluto de creatinina. Concretamente, se considera que un paciente desarrolla AKI en las primeras 48 horas de ingreso si su creatinina máxima en ese periodo supera en 0,3 mg/dL o más a la creatinina basal registrada al ingreso. Esta elección se debe a que los datos disponibles en la base Doctoris no incluyen información fiable sobre diuresis horaria, y el criterio de 0,3 mg/dL es el que mejor se adapta a una ventana temporal corta de predicción.
+
+\section{Epidemiología y relevancia clínica de la AKI hospitalaria}
+La AKI no es una rareza clínica. Más bien al contrario: se trata de una de las complicaciones más frecuentes en el entorno hospitalario, y su incidencia ha ido aumentando en las últimas décadas. Este incremento se explica, al menos en parte, por el envejecimiento de la población, el aumento de comorbilidades como la diabetes o la insuficiencia cardíaca, y el uso más extendido de procedimientos diagnósticos y terapéuticos con potencial nefrotóxico.
+
+Según la revisión de Hoste y colaboradores publicada en Nature Reviews Nephrology, las estimaciones de prevalencia de AKI varían enormemente dependiendo del contexto clínico y los criterios utilizados. En hospitalizaciones generales, las cifras oscilan entre el 10 y el 15 por ciento de los ingresos. En unidades de cuidados intensivos, la situación es bastante más preocupante: estudios multicéntricos como el AKI-EPI, que incluyó cerca de 2.000 pacientes de 97 centros en distintos países, encontraron que más de la mitad de los pacientes críticos desarrollaban algún grado de AKI durante la primera semana de ingreso en UCI \parencite{hoste2015akiepi}. Son cifras que invitan a la reflexión.
+
+La mortalidad asociada a la AKI es considerable. En pacientes hospitalizados, el desarrollo de AKI multiplica el riesgo de muerte intrahospitalaria, con tasas que pueden superar el 20-25 por ciento en formas moderadas y alcanzar el 50 por ciento o más cuando se requiere diálisis. Un dato que resulta muy llamativo es que incluso los estadios más leves de AKI, aquellos en los que la creatinina apenas sube unas décimas, ya se asocian con un aumento significativo de la mortalidad. Esto refuerza la idea de que no estamos ante un problema menor o transitorio.
+
+Más allá de la fase aguda, la AKI tiene consecuencias a largo plazo que durante mucho tiempo pasaron relativamente desapercibidas. Como señalan Chawla y colaboradores en su revisión del \textbf{New England Journal of Medicine}, la AKI y la enfermedad renal crónica no son entidades separadas sino que están íntimamente conectadas. Un episodio de AKI, aunque se resuelva aparentemente por completo, deja huella: aumenta el riesgo de desarrollar enfermedad renal crónica en el futuro, acelera la progresión de la ERC preexistente, y eleva la mortalidad cardiovascular a medio y largo plazo \parencite{chawla2014akickd}.
+
+El impacto económico tampoco es despreciable. Los pacientes que desarrollan AKI permanecen más tiempo hospitalizados, requieren más recursos y generan costes significativamente mayores. En algunos sistemas sanitarios se ha estimado que la AKI puede incrementar el coste de una hospitalización en varios miles de euros. A esto hay que añadir los costes derivados del seguimiento posterior, las posibles necesidades de diálisis crónica y la pérdida de productividad.
+
+Todo lo anterior subraya una idea central: la detección precoz de la AKI tiene un valor clínico indiscutible. Si se pudiera identificar a los pacientes con mayor riesgo de desarrollar daño renal antes de que este se manifieste analíticamente, existiría una ventana de oportunidad para intervenir. Las intervenciones preventivas no son complicadas: optimizar la hidratación, evitar o ajustar fármacos nefrotóxicos, monitorizar más estrechamente la función renal. El problema es saber a quién aplicar estas medidas con antelación suficiente.
+
+En el contexto de HM Hospitales, donde se ha desarrollado este trabajo, no existían hasta la fecha datos específicos sobre la incidencia de AKI. El análisis de la cohorte extraída de la base de datos Doctoris reveló una prevalencia de AKI en las primeras 48 horas del 2,5 por ciento aproximadamente. Esta cifra es inferior a las reportadas en series de UCI, lo cual tiene sentido dado que la población estudiada incluye pacientes de hospitalización general. De todos modos, incluso este porcentaje aparentemente bajo representa un número absoluto considerable de pacientes si se extrapola al volumen total de ingresos anuales de la red hospitalaria.
+\section{Factores de riesgo de AKI y el papel de la nefrotoxicidad farmacológica}
+
+El desarrollo de una lesión renal aguda rara vez obedece a una causa única. Lo habitual es que confluyan varios factores que, actuando de forma conjunta, sobrepasan la capacidad de adaptación del riñón. Conocer estos factores de riesgo resulta fundamental tanto para la prevención como para el desarrollo de modelos predictivos.
+
+Entre los factores no modificables, la edad ocupa un lugar destacado. El riñón envejecido tiene menor reserva funcional: pierde nefronas, presenta mayor fibrosis intersticial y responde peor a las agresiones. Por eso no sorprende que la incidencia de AKI aumente de forma marcada a partir de los 65 años. En la cohorte analizada en este trabajo, la variable "Edad mayor o igual a 65" se incluyó precisamente para capturar este efecto.
+
+La presencia de enfermedad renal crónica previa es otro factor de riesgo bien establecido. Un paciente que ya parte de una función renal disminuida tiene menos margen antes de cumplir criterios de AKI, y además su riñón es más vulnerable a nuevas agresiones. Algo similar ocurre con la diabetes mellitus, la insuficiencia cardíaca y la cirrosis hepática: todas ellas predisponen al desarrollo de daño renal agudo por mecanismos diversos.
+
+Sin embargo, los factores que más interés tienen desde el punto de vista preventivo son los modificables. Y entre ellos, la exposición a fármacos nefrotóxicos merece una atención especial. Se estima que los medicamentos están implicados en aproximadamente el 20-30 por ciento de los casos de AKI hospitalaria. En algunos contextos, como las unidades de cuidados intensivos, esta proporción puede ser aún mayor.
+
+Los antiinflamatorios no esteroideos, los famosos AINEs, son probablemente los nefrotóxicos más extendidos. Su mecanismo de daño renal está bien caracterizado: al inhibir la ciclooxigenasa, bloquean la síntesis de prostaglandinas renales que normalmente mantienen la vasodilatación de la arteriola aferente. En condiciones de perfusión renal comprometida (deshidratación, insuficiencia cardíaca, uso concomitante de diuréticos), esta inhibición puede precipitar una caída brusca del filtrado glomerular. El riesgo es especialmente alto cuando se combinan AINEs con inhibidores del sistema renina-angiotensina y diuréticos, una asociación conocida en la literatura anglosajona como "triple whammy" \parencite{zhang2017nsaid}.
+
+Los aminoglucósidos constituyen otro grupo clásico de nefrotóxicos. Estos antibióticos, que incluyen gentamicina, amikacina y tobramicina, se acumulan en las células del túbulo proximal a través de un mecanismo de endocitosis mediado por el receptor megalina. Una vez dentro de la célula, alteran la función mitocondrial y lisosomal, lo que eventualmente conduce a la muerte celular. La nefrotoxicidad por aminoglucósidos es dosis-dependiente y se relaciona también con la duración del tratamiento. Por este motivo, las pautas de administración en dosis única diaria han ganado terreno frente a las pautas fraccionadas tradicionales \parencite{perazella2022drugaki}.
+
+La vancomicina, un glucopéptido ampliamente utilizado frente a infecciones por grampositivos resistentes, también se asocia con nefrotoxicidad. Durante años existió debate sobre si el daño renal atribuido a vancomicina no se debía en realidad a factores confundentes, pero estudios más recientes han confirmado que el fármaco puede causar daño tubular directo, especialmente cuando se alcanzan concentraciones plasmáticas elevadas o se prolonga el tratamiento \parencite{pais2020vancomycin}. La monitorización de niveles plasmáticos es práctica habitual para minimizar este riesgo.
+
+Los inhibidores de la enzima convertidora de angiotensina (IECAs) y los antagonistas de los receptores de angiotensina II (ARA-II) ocupan un lugar peculiar en esta lista. No son nefrotóxicos en el sentido clásico del término; de hecho, a largo plazo ejercen un efecto nefroprotector en pacientes con proteinuria. Sin embargo, su mecanismo de acción, que consiste en dilatar la arteriola eferente glomerular, puede precipitar una caída del filtrado glomerular en situaciones de hipoperfusión renal. Por eso se recomienda suspenderlos temporalmente cuando un paciente presenta deshidratación, hipotensión o enfermedad aguda intercurrente.
+
+Los diuréticos, especialmente los de asa como la furosemida, contribuyen al riesgo de AKI principalmente a través de la depleción de volumen. Un paciente excesivamente diurizado pierde volumen intravascular efectivo, lo que compromete la perfusión renal. El efecto se magnifica cuando se combinan con AINEs o inhibidores del sistema renina-angiotensina.
+
+En el modelo desarrollado en este trabajo, se incluyeron variables binarias para cada uno de estos grupos farmacológicos: AINE, IECA, ARA-II, diurético, vancomicina y aminoglucósido. Además, se creó una variable derivada que cuenta el número total de fármacos de riesgo que recibe cada paciente, partiendo de la hipótesis de que la exposición simultánea a múltiples nefrotóxicos incrementa el riesgo de forma aditiva o incluso sinérgica.
+
+\section{Predicción de AKI mediante inteligencia artificial: estado del arte}
+
+La idea de anticiparse al desarrollo de la AKI no es nueva. Durante décadas se han propuesto diversos scores clínicos y modelos de riesgo, algunos específicos para contextos concretos como la cirugía cardíaca o la exposición a contraste yodado. Sin embargo, estos modelos tradicionales, basados generalmente en regresión logística con un número reducido de variables, han mostrado un rendimiento modesto en la práctica clínica habitual.
+
+El auge de las técnicas de aprendizaje automático ha abierto nuevas posibilidades en este campo. Los algoritmos de machine learning pueden manejar un número elevado de variables, detectar interacciones no lineales y adaptarse a patrones complejos que difícilmente capturaría un modelo estadístico convencional. No se extraña, por tanto, que en la última década haya proliferado la investigación sobre predicción de AKI mediante inteligencia artificial.
+
+Varias revisiones sistemáticas han intentado sintetizar esta literatura creciente. El trabajo de Rank y colaboradores, publicado en \parencite{rank2022mlaki}, identificó 46 estudios que desarrollaban modelos de machine learning para predecir AKI. Los algoritmos más utilizados fueron Random Forest, gradient boosting y redes neuronales, aunque la regresión logística seguía apareciendo con frecuencia como modelo de referencia para comparación. En cuanto a las variables predictoras, las más recurrentes fueron la edad, la creatinina sérica, el nitrógeno ureico en sangre, el potasio y diversos indicadores de comorbilidad. 
+
+Una revisión más reciente, la de Zhao y colaboradores publicada en \parencite{zhao2024akiml}, analizó específicamente los modelos de ML aplicados al pronóstico de pacientes con AKI ya establecida. Los resultados del meta-análisis mostraron que los métodos de machine learning superaban a los enfoques tradicionales en la predicción de mortalidad, con un área bajo la curva ROC de 0,831 frente a 0,772 para los modelos clásicos. Esta diferencia, aunque estadísticamente significativa, da a una reflexión: en los modelos de machine learning existe cierta mejora , aunque la diferncia no es tan grande comopodría esperarse leyendo ciertos estudios.
+
+El estudio que probablemente más repercusión mediática ha tenido en este campo fue el publicado por Tomašev y colaboradores en la revista \parencite{tomasev2019nature}. Utilizando datos de más de 700.000 pacientes del sistema de salud de veteranos de Estados Unidos, el equipo de DeepMind (agencia de Google dedicada a inteligencia artificial) desarrolló un modelo de redes neuronales recurrentes capaz de predecir AKI con hasta 48 horas de antelación, alcanzando un área bajo la curva de 0,921. El trabajo generó considerable expectación, aunque también críticas metodológicas: el modelo funcionaba mucho mejor en hombres que en mujeres (la cohorte de veteranos era predominantemente masculina), y las tasas de falsos positivos eran elevadas, lo que planteaba dudas sobre su utilidad práctica.
+
+Dejando a un lado los titulares más optimistas, lo que muestran las revisiones es un escenario con cosas positivas pero también con bastantes limitaciones. Por el lado positivo, existe evidencia de que los modelos de ML pueden alcanzar rendimientos aceptables e incluso buenos en la predicción de AKI. Por el lado menos favorable, la mayoría de los estudios presentan limitaciones metodológicas importantes. La revisión de Shi y colaboradores, publicada en \parencite{shi2025aiaki}, evaluó 47 estudios utilizando las herramientas PROBAST y TRIPOD y encontró que 44 de ellos tenían alto riesgo de sesgo. Los problemas más frecuentes eran la falta de validación externa (solo 14 estudios la realizaban), el uso de cohortes muy seleccionadas, y deficiencias en el reporte de la metodología.
+
+Esta última observación tiene implicaciones directas para el presente trabajo. Desarrollar un modelo predictivo que funcione bien en los datos con los que se entrena es relativamente sencillo; lo difícil es que ese modelo generalice a poblaciones diferentes. Por eso, cualquier trabajo de estas características debe ser transparente respecto a sus limitaciones y evitar conclusiones excesivamente optimistas.
+
+Otra cuestión relevante es la brecha entre el desarrollo de modelos y su implementación clínica real. La mayoría de los estudios publicados se quedan en la fase de desarrollo y validación interna. Son muy pocos los que llegan a integrarse en sistemas de información hospitalaria o a evaluarse en ensayos prospectivos que midan su impacto en resultados de salud. Esta brecha no es exclusiva del campo de la AKI, pero resulta particularmente llamativa dado el volumen de publicaciones existentes.
+
+En definitiva, el estado del arte sugiere que la predicción de AKI mediante machine learning es una línea de investigación prometedora pero todavía inmadura. Los modelos publicados muestran capacidad discriminativa razonable, pero su traslación a la práctica clínica requiere abordar cuestiones de validación externa, interpretabilidad, integración en flujos de trabajo y, en último término, demostración de beneficio para los pacientes.
+
+\section{Modelos de aprendizaje automático para clasificación clínica}
+
+En este trabajo se han empleado dos algoritmos de clasificación: la regresión logística y el Random Forest. La elección de estos dos modelos no es casual. Representan, en cierto modo, dos filosofías distintas de abordar los problemas de predicción, y su comparación permite obtener perspectivas complementarias.
+
+\subsection{Regresión logística}
+
+La regresión logística es probablemente el modelo de clasificación más utilizado en investigación clínica y epidemiológica. Su popularidad se debe a una combinación de factores: es matemáticamente sencilla, sus resultados son directamente interpretables, y cuenta con décadas de uso que la han convertido en un estándar aceptado por clínicos y revisores de revistas médicas.
+
+El modelo parte de una combinación lineal de las variables predictoras, que luego se transforma mediante la función logística para obtener una probabilidad entre 0 y 1. En términos formales, si llamamos "p" a la probabilidad de que ocurra el evento de interés (en nuestro caso, desarrollar AKI), el modelo estima:
+
+\begin{equation}
+\log\left(\frac{p}{1-p}\right) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_n X_n
+\end{equation}
+
+Los coeficientes $\beta$ representan el cambio en el logaritmo de odds por cada unidad de incremento en la variable correspondiente. Exponenciando estos coeficientes se obtienen los odds ratios, que tienen una interpretación intuitiva: un OR de 2 para una variable indica que la presencia de esa característica duplica las odds de desarrollar el evento.
+
+Esta interpretabilidad constituye la principal fortaleza de la regresión logística en el contexto clínico. Un médico puede entender que un paciente con creatinina basal elevada tiene mayor riesgo de AKI, y puede cuantificar aproximadamente cuánto mayor es ese riesgo. Esto facilita la aceptación del modelo y su uso en la toma de decisiones.
+
+Sin embargo, la regresión logística también tiene limitaciones. Asume una relación lineal entre los predictores y el logaritmo de odds, lo cual no siempre se cumple en la realidad. Por ejemplo, la relación entre edad y riesgo de AKI podría ser no lineal, con un incremento más pronunciado a partir de cierta edad. Además, el modelo no captura de forma automática las interacciones entre variables: si el efecto de los AINEs es particularmente nocivo en pacientes que también toman diuréticos, la regresión logística básica no detectará esta interacción a menos que se especifique explícitamente \parencite{hosmer2013logistic}.
+
+\subsection{Random Forest}
+
+El Random Forest, propuesto por Leo Breiman en 2001 \parencite{breiman2001rf}, representa un enfoque radicalmente distinto. En lugar de ajustar una única ecuación, el algoritmo construye un conjunto (o "bosque") de árboles de decisión, cada uno entrenado con una muestra aleatoria de los datos y utilizando un subconjunto aleatorio de variables en cada división. La predicción final se obtiene agregando las predicciones individuales de todos los árboles, típicamente mediante votación mayoritaria en problemas de clasificación.
+
+Esta estrategia de ensemble tiene varias ventajas. En primer lugar, reduce el riesgo de sobreajuste que aqueja a los árboles de decisión individuales. Un árbol solo, si se deja crecer sin restricciones, puede aprender de memoria las peculiaridades de los datos de entrenamiento sin capturar patrones generalizables. Al promediar muchos árboles construidos de forma ligeramente diferente, el Random Forest suaviza este problema.
+
+En segundo lugar, el algoritmo es capaz de modelar relaciones no lineales e interacciones de forma automática, sin necesidad de especificarlas previamente. Cada árbol puede dividir el espacio de predictores de formas complejas, y el conjunto captura patrones que un modelo lineal pasaría por alto.
+
+En tercer lugar, el Random Forest proporciona medidas de importancia de variables. Existen varias formas de calcularlas, siendo las más comunes la importancia por permutación (cuánto empeora el rendimiento del modelo si se barajan aleatoriamente los valores de una variable) y la importancia basada en la disminución de impureza de Gini. Estas medidas permiten identificar qué predictores son más relevantes para las predicciones del modelo.
+
+El principal inconveniente del Random Forest es su menor interpretabilidad. No produce coeficientes ni odds ratios; la relación entre cada variable y el resultado está distribuida a lo largo de cientos de árboles y no puede resumirse en una fórmula sencilla. Esto dificulta explicar a un clínico exactamente por qué el modelo ha asignado determinada probabilidad a un paciente concreto.
+
+\subsection{¿Cuál es mejor?} 
+
+La comparación sistemática entre Random Forest y regresión logística ha sido objeto de numerosos estudios. El trabajo de Couronné y colaboradores, publicado en *BMC Bioinformatics* en 2018 \parencite{couronne2018rflr}, analizó el rendimiento de ambos algoritmos en 243 datasets reales de características variadas. Sus resultados mostraron que el Random Forest superaba a la regresión logística en aproximadamente el 69\% de los casos, con una diferencia media en AUC de 0,04 puntos. La ventaja del Random Forest tendía a ser mayor en datasets con muchas variables y relaciones no lineales.
+
+Sin embargo, esta superioridad no es universal. En problemas con pocas variables, muestras pequeñas o relaciones aproximadamente lineales, la regresión logística puede igualar o incluso superar al Random Forest, con la ventaja añadida de su mayor transparencia. Por eso tiene sentido, como se hace en este trabajo, entrenar y comparar ambos modelos en lugar de asumir de entrada cuál funcionará mejor.
+
+\section{Evaluación de modelos en problemas con clases desbalanceadas}
+
+Un aspecto metodológico que merece atención especial en este trabajo es el desequilibrio entre clases. De los 1.175 ingresos hospitalarios analizados, solo 29 desarrollaron AKI en las primeras 48 horas, lo que representa aproximadamente un 2,5\% del total. Este tipo de desbalanceo es habitual en problemas de predicción clínica: los eventos adversos que queremos predecir suelen ser, por definición, relativamente infrecuentes.
+
+El problema con los datos desbalanceados es que las métricas de evaluación convencionales pueden resultar engañosas. Consideremos la exactitud (accuracy), que mide el porcentaje de predicciones correctas. Un modelo que simplemente clasificara a todos los pacientes como "no AKI" obtendría una exactitud del 97,5\%: acertaría en 1.146 de 1.175 casos. Sin embargo, este modelo sería completamente inútil para el propósito clínico de identificar pacientes en riesgo, ya que no detectaría ni un solo caso positivo.
+
+Por este motivo, en problemas desbalanceados conviene recurrir a métricas que evalúen por separado el rendimiento en cada clase. La sensibilidad (también llamada recall o tasa de verdaderos positivos) mide qué proporción de los casos realmente positivos el modelo consigue identificar. En nuestro contexto, una sensibilidad del 70\% significaría que el modelo detecta correctamente 7 de cada 10 pacientes que desarrollan AKI. Esta métrica es particularmente relevante cuando el coste de pasar por alto un caso positivo es alto, como ocurre en muchas aplicaciones médicas.
+
+La precisión (o valor predictivo positivo) adopta la perspectiva complementaria: de todos los pacientes que el modelo clasifica como positivos, qué proporción realmente lo son. Una precisión baja indica que el modelo genera muchas alarmas falsas, lo cual también tiene consecuencias prácticas: si un sistema de alerta hospitalario produce demasiados falsos positivos, el personal sanitario acabará ignorándolo.
+
+El F1-score combina sensibilidad y precisión en una única métrica mediante su media armónica. Resulta útil cuando se quiere un balance entre ambas, aunque tiene la limitación de ponderar ambas por igual, lo que puede no reflejar las prioridades clínicas reales. En algunas situaciones tiene más sentido usar variantes como el F2-score, que da mayor peso a la sensibilidad.
+
+El área bajo la curva ROC (AUC-ROC) ofrece una perspectiva diferente. La curva ROC representa la sensibilidad frente a la tasa de falsos positivos para todos los posibles umbrales de decisión. El AUC resume esta información en un único número entre 0 y 1, donde 0,5 corresponde a un clasificador aleatorio y 1 a un clasificador perfecto. El AUC tiene la ventaja de ser independiente del umbral elegido y de ser relativamente robusto al desbalanceo de clases.
+
+No obstante, cuando el desbalanceo es muy pronunciado, el AUC-ROC puede ofrecer una visión excesivamente optimista. Esto se debe a que la tasa de falsos positivos (eje X de la curva) está dominada por la clase mayoritaria, que es muy numerosa. Algunos autores recomiendan en estos casos prestar más atención a la curva precisión-recall y su área bajo la curva (PR-AUC), que se centra exclusivamente en el rendimiento sobre la clase minoritaria \parencite{saito2015prroc}.
+
+Un aspecto que a menudo se pasa por alto es la elección del umbral de decisión. Por defecto, muchos algoritmos asignan la clase positiva cuando la probabilidad predicha supera 0,5. Sin embargo, este umbral no es óptimo en problemas desbalanceados. Reducirlo (por ejemplo, a 0,2 o 0,3) aumenta la sensibilidad a costa de la precisión, lo cual puede ser apropiado si el objetivo prioritario es no dejar escapar casos positivos. En este trabajo se ha explorado el efecto de variar el umbral para entender mejor el comportamiento de los modelos.
+
+Por último, existen estrategias para abordar el desbalanceo durante el entrenamiento del modelo. El remuestreo de la clase minoritaria (oversampling), el submuestreo de la clase mayoritaria (undersampling), y técnicas sintéticas como SMOTE son opciones comunes. Otra alternativa es asignar pesos diferentes a las clases en la función de pérdida, penalizando más los errores sobre la clase minoritaria. En este trabajo se ha optado por esta última estrategia, utilizando el parámetro class\_weight='balanced' disponible en las implementaciones de scikit-learn.
+
+
+\section{Interpretabilidad en modelos clínicos}
+
+La interpretabilidad de los modelos predictivos es un tema que ha ganado protagonismo en los últimos años, especialmente en el ámbito sanitario. No basta con que un modelo tenga buen rendimiento; también es deseable, y en muchos contextos imprescindible, entender cómo llega a sus predicciones.
+
+Esta exigencia de transparencia tiene varias justificaciones. En primer lugar, los profesionales sanitarios necesitan confiar en las herramientas que utilizan. Un modelo opaco, tipo "caja negra", que emite predicciones sin explicación alguna, genera resistencia comprensible. El clínico puede preguntarse: ¿por qué debería creer lo que dice este algoritmo? Si no puedo entender su razonamiento, ¿cómo puedo valorar si tiene sentido en este paciente concreto?
+
+En segundo lugar, la interpretabilidad facilita la detección de errores. Un modelo puede tener buen rendimiento aparente pero basarse en características espurias o en artefactos de los datos. Por ejemplo, se han documentado casos de modelos radiológicos que aprendían a distinguir imágenes según el equipamiento utilizado en lugar de las características clínicas relevantes. Sin interpretabilidad, estos problemas pueden pasar desapercibidos.
+
+En tercer lugar, entender qué variables son importantes para el modelo proporciona información clínicamente valiosa. Si un modelo de predicción de AKI da mucho peso a la creatinina basal y a la exposición a AINEs, esto refuerza el conocimiento existente y sugiere dónde enfocar las intervenciones preventivas.
+
+Los modelos de regresión logística tienen interpretabilidad intrínseca. Los coeficientes indican directamente la magnitud y dirección del efecto de cada variable. Un coeficiente positivo significa que valores más altos de esa variable se asocian con mayor probabilidad del evento; el tamaño del coeficiente (o, más intuitivamente, el odds ratio) cuantifica la fuerza de esa asociación.
+
+El Random Forest, en cambio, requiere técnicas de interpretabilidad post-hoc. La más utilizada es la importancia de variables, que puede calcularse de varias formas. La importancia por permutación mide cuánto empeora el rendimiento del modelo cuando se destruye aleatoriamente la información de una variable; variables más importantes producen mayor deterioro. La importancia basada en Gini mide la contribución promedio de cada variable a la reducción de impureza en los nodos de los árboles.
+
+Estas medidas de importancia proporcionan un ranking de las variables más influyentes, pero no indican la dirección del efecto ni permiten cuantificarlo de forma tan directa como los coeficientes de regresión. Para subsanar esto, se han desarrollado métodos como los gráficos de dependencia parcial, que muestran cómo varía la predicción esperada a medida que cambia una variable manteniendo las demás constantes. También existen técnicas más sofisticadas como SHAP (SHapley Additive exPlanations), que descomponen la predicción de cada caso individual en contribuciones atribuibles a cada variable.
+
+En el presente trabajo, la interpretación de los modelos se ha abordado examinando los coeficientes de la regresión logística y la importancia de variables del Random Forest. Esto permite identificar qué predictores son más relevantes según cada modelo y comparar si ambos coinciden en señalar las mismas variables como importantes. Como se verá en la sección de resultados, existe cierta concordancia pero también diferencias interesantes que merecen discusión.
+
+%% --- CAPÍTULO 3: JUSTIFICACIÓN ---
+\chapter{Justificación}
+\label{chap:justificacion}
+
+\section{Relevancia e innovación del tema}
+\label{sec:relevancia}
+
+\textit{Justificar la relevancia e innovación del tema tratado.}
+
+\section{Aportación del trabajo}
+\label{sec:aportacion}
+
+\textit{Describir la aportación original de este trabajo respecto a estudios previos.}
+
+%% --- CAPÍTULO 4: OBJETIVOS ---
+\chapter{Objetivos}
+\label{chap:objetivos}
+
+\section{Objetivo general}
+\label{sec:obj_general}
+
+\textit{Desarrollar y evaluar un modelo de aprendizaje automático para predecir la aparición de lesión renal aguda en las primeras 48 horas de ingreso hospitalario, utilizando datos clínicos disponibles al momento del ingreso.}
+
+\section{Objetivos específicos}
+\label{sec:obj_especificos}
+
+\textit{Los objetivos específicos están más relacionados con el resto de los capítulos del documento. Deben seguir los principios SMART.}
+
+\begin{enumerate}
+    \item \textbf{OE1:} Identificar las variables clínicas, analíticas y farmacológicas disponibles en la base de datos hospitalaria que puedan estar asociadas al desarrollo de AKI.
+    \item \textbf{OE2:} Construir un dataset estructurado mediante un proceso de extracción, limpieza y transformación de los datos clínicos.
+    \item \textbf{OE3:} Realizar un análisis exploratorio para caracterizar la cohorte y detectar patrones relacionados con el desarrollo de AKI.
+    \item \textbf{OE4:} Entrenar y comparar modelos de regresión logística y Random Forest para la predicción de AKI, evaluando su rendimiento mediante métricas apropiadas para problemas desbalanceados.
+    \item \textbf{OE5:} Analizar la importancia de las variables predictoras e interpretar los resultados desde una perspectiva clínica.
+\end{enumerate}
+
+%% --- CAPÍTULO 5: METODOLOGÍA ---
+\chapter{Metodología}
+\label{chap:metodologia}
+
+En este apartado se describe la metodología seguida para alcanzar los objetivos planteados.
+
+\section{Fuente de datos}
+\label{sec:fuente_datos}
+
+\textit{Descripción de la base de datos utilizada (MIMIC-IV).}
+
+\section{Criterios de inclusión y exclusión}
+\label{sec:criterios}
+
+\textit{Definición de los criterios para la selección de pacientes.}
+
+\section{Definición de AKI}
+\label{sec:definicion_aki}
+
+\textit{Criterios utilizados para definir la variable objetivo.}
+
+\section{Preprocesamiento de datos}
+\label{sec:preprocesamiento}
+
+\textit{Limpieza, transformación e imputación de datos.}
+
+\section{Ingeniería de características}
+\label{sec:feature_engineering}
+
+\textit{Creación y selección de variables predictoras.}
+
+\section{Modelos de Machine Learning}
+\label{sec:modelos_ml}
+
+\textit{Descripción de los algoritmos utilizados y su configuración.}
+
+\section{Métricas de evaluación}
+\label{sec:metricas}
+
+\textit{Métricas utilizadas para evaluar el rendimiento de los modelos.}
+
+%% --- CAPÍTULO 6: DESARROLLO ---
+\chapter{Desarrollo del Trabajo}
+\label{chap:desarrollo}
+
+\section{Exploración de datos}
+\label{sec:exploracion}
+
+\textit{Análisis exploratorio de los datos.}
+
+\section{Preparación del conjunto de datos}
+\label{sec:preparacion}
+
+\textit{Proceso de creación del dataset final.}
+
+\section{Entrenamiento de modelos}
+\label{sec:entrenamiento}
+
+\textit{Descripción del proceso de entrenamiento.}
+
+%% Ejemplo de figura
+%% \begin{figure}[H]
+%%     \centering
+%%     \includegraphics[width=0.8\textwidth]{img/figura_ejemplo.png}
+%%     \caption{Descripción de la figura. Fuente: elaboración propia.}
+%%     \label{fig:ejemplo}
+%% \end{figure}
+
+%% Ejemplo de tabla
+%% \begin{table}[H]
+%%     \centering
+%%     \caption{Descripción de la tabla. Fuente: elaboración propia.}
+%%     \label{tab:ejemplo}
+%%     \begin{tabular}{lcc}
+%%         \toprule
+%%         \textbf{Variable} & \textbf{Valor 1} & \textbf{Valor 2} \\
+%%         \midrule
+%%         Variable A & 0.85 & 0.90 \\
+%%         Variable B & 0.78 & 0.82 \\
+%%         \bottomrule
+%%     \end{tabular}
+%% \end{table}
+
+%% --- CAPÍTULO 7: RESULTADOS ---
+\chapter{Resultados}
+\label{chap:resultados}
+
+\section{Análisis descriptivo de la muestra}
+\label{sec:descriptivo}
+
+\textit{Características de la población de estudio.}
+
+\section{Rendimiento de los modelos}
+\label{sec:rendimiento}
+
+\textit{Comparación del rendimiento de los diferentes modelos.}
+
+\section{Interpretabilidad del modelo}
+\label{sec:interpretabilidad}
+
+\textit{Análisis de la importancia de variables y explicabilidad.}
+
+\section{Discusión}
+\label{sec:discusion}
+
+\textit{Análisis crítico de los resultados obtenidos y comparación con la literatura.}
+
+%% --- CAPÍTULO 8: CONCLUSIONES ---
+\chapter{Conclusiones}
+\label{chap:conclusiones}
+
+\textit{Verificar si se han alcanzado los objetivos planteados al principio de esta memoria. En caso positivo, comentar las evidencias más relevantes y en caso negativo, indicar los motivos por los que se cree que ha fallado el objetivo en cuestión.}
+
+\section{Conclusiones generales}
+\label{sec:conclusiones_generales}
+
+\textit{Conclusiones principales del trabajo.}
+
+\section{Limitaciones del estudio}
+\label{sec:limitaciones}
+
+\textit{Limitaciones identificadas en el desarrollo del trabajo.}
+
+%% --- CAPÍTULO 9: TRABAJOS FUTUROS ---
+\chapter{Trabajos Futuros}
+\label{chap:trabajos_futuros}
+
+\textit{Describir cómo se le daría continuidad a este trabajo en el futuro, posibles nuevas líneas de investigación, o si el trabajo y metodología podrían extrapolarse a otros sectores o proyectos relacionados.}
+
+%% ==================== BIBLIOGRAFÍA ==================== %%
+\newpage
+\printbibliography[heading=bibintoc, title={Referencias Bibliográficas}]
+
+%% ==================== ANEXOS ==================== %%
+\appendix
+\chapter{Anexo A: Código fuente}
+\label{chap:anexo_codigo}
+
+\textit{Incluir aquí código fuente relevante o referencias al repositorio.}
+
+\chapter{Anexo B: Tablas complementarias}
+\label{chap:anexo_tablas}
+
+\textit{Incluir aquí tablas adicionales que no se han incluido en el cuerpo principal.}
+
+\end{document}
