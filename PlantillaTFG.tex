@@ -536,16 +536,45 @@ En el presente trabajo, la interpretación de los modelos se ha abordado examina
 %% --- CAPÍTULO 3: JUSTIFICACIÓN ---
 \chapter{Justificación}
 \label{chap:justificacion}
+El desarrollo de este Trabajo de Fin de Grado responde a una confluencia de factores clínicos, tecnológicos y académicos que hacen del problema abordado un campo de estudio con alto interés tanto para la investigación biomédica como para la práctica asistencial.
 
-\section{Relevancia e innovación del tema}
+\section{Relevancia clínica del problema}
 \label{sec:relevancia}
+La lesión renal aguda representa una de las complicaciones más frecuentes y con mayor impacto pronóstico dentro del entorno hospitalario. Los datos epidemiológicos disponibles indican que entre el 10\% y el 15\% de los pacientes hospitalizados desarrollan algún grado de AKI durante su ingreso, cifra que asciende hasta el 50-60\% en unidades de cuidados intensivos \parencite{hoste2018epidemiology, hoste2015aki}. Las consecuencias de esta complicación trascienden el episodio agudo: los pacientes que desarrollan AKI presentan mayor mortalidad intrahospitalaria, estancias más prolongadas y un riesgo incrementado de progresar hacia enfermedad renal crónica a medio y largo plazo \parencite{chawla2014nejm}.
 
-\textit{Justificar la relevancia e innovación del tema tratado.}
+Desde una perspectiva de gestión sanitaria, la AKI supone también una carga económica considerable. La necesidad de tratamiento sustitutivo renal, la prolongación de los ingresos y las complicaciones asociadas generan costes que podrían reducirse si se actuara de forma preventiva sobre los pacientes con mayor riesgo. Este aspecto adquiere especial relevancia en un contexto de recursos sanitarios limitados, donde la optimización de la atención resulta prioritaria.
 
-\section{Aportación del trabajo}
-\label{sec:aportacion}
+El problema central radica en que la detección de la AKI mediante marcadores convencionales, fundamentalmente la creatinina sérica, suele producirse cuando el daño renal ya está establecido. La creatinina es un marcador funcional con un retraso inherente: sus niveles no aumentan de forma inmediata tras la agresión renal, sino cuando la capacidad de filtración glomerular ya se ha deteriorado significativamente. Esta latencia reduce el margen de maniobra para implementar medidas preventivas o correctoras, como el ajuste de fármacos nefrotóxicos, la optimización hemodinámica o la intensificación de la monitorización analítica.
 
-\textit{Describir la aportación original de este trabajo respecto a estudios previos.}
+\section{Oportunidad tecnológica}
+\label{sec:oportunidad}
+Los sistemas de información hospitalarios actuales generan volúmenes de datos que hace apenas dos décadas habrían resultado inmanejables. Cada ingreso produce decenas o cientos de registros estructurados: analíticas seriadas, prescripciones farmacológicas, constantes vitales, diagnósticos codificados, procedimientos realizados. Sin embargo, la mayor parte de esta información se utiliza exclusivamente para el seguimiento individual del paciente y rara vez se explota de forma sistemática para la estratificación del riesgo o la detección temprana de complicaciones.
+
+Las técnicas de aprendizaje automático ofrecen la posibilidad de extraer patrones predictivos de estos repositorios de datos clínicos. A diferencia de los modelos estadísticos tradicionales, los algoritmos de machine learning pueden manejar un número elevado de variables, capturar relaciones no lineales y adaptarse a la heterogeneidad propia de los datos hospitalarios reales. En el campo específico de la predicción de AKI, diversos estudios han demostrado que los modelos de aprendizaje automático pueden alcanzar un rendimiento discriminativo superior al de las escalas de riesgo convencionales \parencite{tomasev2019nature, churpek2020jama, rank2022systematic}.
+
+No obstante, la literatura también señala limitaciones importantes. Muchos de los modelos publicados presentan alto riesgo de sesgo metodológico, carecen de validación externa y se han desarrollado sobre poblaciones específicas (principalmente estadounidenses o del norte de Europa) que pueden no ser directamente extrapolables a otros contextos \parencite{shi2025jamia}. Esta circunstancia subraya la necesidad de desarrollar y evaluar modelos en entornos clínicos diversos, incluyendo hospitales españoles con sus propias características poblacionales y organizativas.
+
+\section{Contexto institucional}
+\label{sec:institucional}
+Este trabajo se desarrolla en el marco de HM Hospitales, con acceso a la base de datos clínica Doctoris. Esta circunstancia ofrece una oportunidad poco habitual en trabajos académicos de grado: la posibilidad de trabajar con datos hospitalarios reales, no simulados ni procedentes de repositorios públicos internacionales.
+
+Trabajar con datos reales introduce complejidades adicionales frente a los datasets de laboratorio. La información clínica presenta valores ausentes, codificaciones heterogéneas, registros incompletos y particularidades derivadas de la práctica asistencial cotidiana. Sin embargo, esta misma complejidad confiere al trabajo una relevancia aplicada que no tendría si se limitara a reproducir experimentos sobre bases de datos previamente depuradas.
+
+El acceso a Doctoris permite además construir una cohorte con características propias del sistema sanitario español, contribuyendo a llenar un vacío en la literatura, dominada por estudios realizados en otros países con sistemas de salud y perfiles poblacionales diferentes.
+
+\section{Pertinencia del enfoque adoptado}
+\label{sec:enfoque}
+La elección de modelos de aprendizaje automático interpretables (regresión logística y Random Forest) responde a un criterio deliberado. Aunque existen arquitecturas más complejas, como las redes neuronales profundas utilizadas por Tomašev et al. \parencite{tomasev2019nature}, estas requieren volúmenes de datos considerablemente mayores y plantean retos de interpretabilidad que dificultan su aceptación en entornos clínicos. Para una prueba de concepto desarrollada en el contexto de un TFG, con las limitaciones de tamaño muestral inherentes a una cohorte monocéntrica, resulta más adecuado emplear modelos cuyo funcionamiento interno pueda analizarse y cuyas predicciones puedan explicarse en términos clínicamente comprensibles.
+
+La inclusión de variables farmacológicas como predictores merece también justificación específica. Diversos fármacos de uso hospitalario habitual presentan potencial nefrotóxico bien documentado: los antiinflamatorios no esteroideos alteran la hemodinámica glomerular, los aminoglucósidos y la vancomicina ejercen toxicidad tubular directa, y los inhibidores del sistema renina-angiotensina pueden precipitar deterioro funcional en pacientes con perfusión renal comprometida \parencite{perazella2019, perazella2022}. La exposición a estos agentes constituye un factor de riesgo modificable, lo que confiere especial interés a su incorporación en modelos predictivos orientados a la prevención.
+
+\section{Alcance y limitaciones asumidas}
+\label{sec:alcance}
+Resulta importante explicitar desde el inicio que este trabajo constituye una prueba de concepto académica, no una herramienta lista para despliegue clínico. El objetivo no es desarrollar un sistema de alertas que pueda implantarse mañana en un hospital, sino demostrar la viabilidad técnica del enfoque, evaluar el rendimiento de modelos baseline sobre datos reales e identificar qué variables parecen más relevantes para la predicción.
+
+Las limitaciones propias de un TFG: tamaño muestral moderado, ausencia de validación externa, restricciones temporales para explorar múltiples arquitecturas. No invalidan el interés del trabajo, sino que definen su alcance. Si los resultados son prometedores, el siguiente paso natural sería ampliar la cohorte, incorporar nuevas variables y validar el modelo en otros centros o periodos temporales. Pero esas extensiones quedan, por definición, fuera del ámbito del presente trabajo de grado.
+
+En síntesis, la justificación de este TFG descansa sobre tres pilares: la relevancia clínica de la AKI como problema prevenible con alto impacto pronóstico, la oportunidad tecnológica que ofrecen los datos hospitalarios estructurados y las técnicas de aprendizaje automático, y la disponibilidad de un entorno real (HM Hospitales, base de datos Doctoris) donde poner a prueba el enfoque propuesto. La confluencia de estos factores hace del problema abordado un campo de estudio con interés tanto académico como potencialmente aplicado.
 
 %% --- CAPÍTULO 4: OBJETIVOS ---
 \chapter{Objetivos}
@@ -558,8 +587,6 @@ En el presente trabajo, la interpretación de los modelos se ha abordado examina
 
 \section{Objetivos específicos}
 \label{sec:obj_especificos}
-
-\textit{Los objetivos específicos están más relacionados con el resto de los capítulos del documento. Deben seguir los principios SMART.}
 
 \begin{enumerate}
     \item \textbf{OE1:} Identificar las variables clínicas, analíticas y farmacológicas disponibles en la base de datos hospitalaria que puedan estar asociadas al desarrollo de AKI.
