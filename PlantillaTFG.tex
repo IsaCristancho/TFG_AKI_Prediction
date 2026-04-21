@@ -188,7 +188,7 @@
 }
 
 \captionsetup[table]{position=above}
-\captionsetup[figure]{position=below}
+%\captionsetup[figure]{position=below}
 
 %% ==================== CONFIGURACIÓN DE CÓDIGO ==================== %%
 \lstset{
@@ -288,7 +288,7 @@
 \chapter*{Resumen}
 \addcontentsline{toc}{chapter}{Resumen}
 
-\textit{La lesión renal aguda es una complicación frecuente en hospitales que se asocia con mayor mortalidad, estancias más largas y costes más altos. Este TFG desarrolla un modelo de inteligencia artificial para predecir de forma temprana qué pacientes tienen riesgo de desarrollar esta complicación, usando datos clínicos de un hospital real. El trabajo parte de la base de datos Doctoris de HM Hospitales, de donde se extraen variables demográficas, analíticas y farmacológicas. Tras un proceso de limpieza y preparación, se entrenan dos modelos (regresión logística y Random Forest) para predecir si un paciente desarrollará lesión renal aguda en las 48 horas siguientes al ingreso. Los resultados muestran que es posible capturar señal predictiva útil, siendo la creatinina basal el predictor más consistente. Aunque el modelo constituye una prueba de concepto y no está listo para uso clínico, sienta las bases para futuras mejoras con más datos y validación externa.}
+Esto tiene que ser lo último al realizar y son unas 250 - 300 palabras.
 
 \vspace{1cm}
 
@@ -298,10 +298,6 @@
 \chapter*{Abstract}
 \addcontentsline{toc}{chapter}{Abstract}
 
-\textit{Insert here the abstract of the Final Degree Project translated into English.}
-
-\textit{Recommended length between 250 and 300 words maximum.}
-
 \vspace{1cm}
 
 \textbf{Keywords:} Artificial Intelligence, Acute Kidney Injury, Machine Learning, Clinical Prediction, Hospital Data, XGBoost.
@@ -310,7 +306,7 @@
 \chapter*{Agradecimientos}
 \addcontentsline{toc}{chapter}{Agradecimientos}
 
-\textit{Sección opcional para expresar agradecimientos a las personas e instituciones que han contribuido al desarrollo de este trabajo.}
+Sección opcional para expresar agradecimientos a las personas e instituciones que han contribuido al desarrollo de este trabajo.
 \clearpage
 
 %% --- ÍNDICE GENERAL ---
@@ -339,44 +335,87 @@
 \chapter{Introducción}
 \label{chap:introduccion}
 
-Este apartado resulta esencial para indicar los antecedentes del tema seleccionado para desarrollar el trabajo fin de grado.
+\section{La lesión renal aguda como problema clínico}
 
-\section{Justificación e interés académico}
-\label{sec:justificacion_interes}
+La lesión renal aguda, conocida habitualmente como AKI por sus siglas en inglés (\textit{Acute Kidney Injury}), es una complicación que los profesionales sanitarios encuentran con notable frecuencia en el entorno hospitalario. Se trata de un deterioro brusco de la función renal que altera la capacidad del organismo para eliminar productos de desecho metabólico y mantener el equilibrio de líquidos y electrolitos. Cuando aparece, el manejo del paciente se complica de forma considerable: hay que ajustar las dosis de medicamentos que se eliminan por vía renal, vigilar más estrechamente las analíticas, controlar el balance hídrico y, en los casos más graves, plantear técnicas de depuración extrarrenal como la hemodiálisis.
 
-\textit{Desarrollar la justificación e interés académico del tema.}
+El riñón es un órgano con funciones que van mucho más allá de la simple producción de orina. Regula la presión arterial, mantiene el equilibrio ácido-base, controla los niveles de potasio y sodio en sangre, y participa en la producción de hormonas como la eritropoyetina. Cuando su función se deteriora de forma aguda, todas estas funciones se ven comprometidas simultáneamente, lo que explica por qué la AKI tiene un impacto tan amplio sobre el estado general del paciente.
 
-\section{Antecedentes}
-\label{sec:antecedentes}
+Las cifras epidemiológicas dan una idea de la magnitud del problema. Según los estudios más recientes, entre el 10\% y el 15\% de los pacientes hospitalizados desarrollan algún grado de AKI durante su ingreso \parencite{hoste2018epidemiology}. En unidades de cuidados intensivos, donde los pacientes están más graves y expuestos a más factores de riesgo, esta cifra asciende hasta el 50-60\% \parencite{hoste2015akiepi}. El estudio AKI-EPI, que analizó datos de 97 unidades de cuidados intensivos en 33 países, encontró que más de la mitad de los pacientes críticos cumplían criterios de AKI en algún momento de su estancia \parencite{hoste2015akiepi}.
 
-\textit{Resumen de los antecedentes más relevantes del campo de estudio.}
+Pero el problema no termina cuando el paciente sale del hospital. La AKI no es simplemente un episodio agudo que se resuelve sin consecuencias. Los pacientes que la desarrollan tienen mayor riesgo de mortalidad tanto a corto como a largo plazo, y existe una conexión bien establecida entre la lesión renal aguda y la progresión hacia enfermedad renal crónica \parencite{chawla2014akickd}. Un riñón que ha sufrido un episodio de daño agudo queda más vulnerable a futuras agresiones, y en algunos casos el deterioro funcional persiste de forma permanente. Esta relación bidireccional entre AKI y enfermedad renal crónica ha llevado a algunos autores a hablar de un síndrome interconectado más que de dos entidades separadas.
 
-\section{Objetivos}
-\label{sec:objetivos_intro}
+Desde una perspectiva de gestión sanitaria, la AKI supone también una carga económica considerable. Los pacientes que la desarrollan requieren estancias más prolongadas, más pruebas diagnósticas, más intervenciones terapéuticas y, en ocasiones, tratamiento sustitutivo renal. Aunque es difícil cuantificar exactamente el coste adicional que supone cada caso de AKI, las estimaciones hablan de incrementos significativos en el gasto hospitalario asociado a esta complicación.
 
-\subsection{Objetivo general}
-\label{subsec:objetivo_general}
+\section{El problema del diagnóstico tardío}
 
-\textit{Describir el objetivo general del trabajo.}
+Si la AKI es tan frecuente y tiene consecuencias tan importantes, cabe preguntarse por qué no se detecta antes. La respuesta tiene que ver con las limitaciones de los marcadores diagnósticos disponibles.
 
-\subsection{Objetivos específicos}
-\label{subsec:objetivos_especificos}
+El criterio diagnóstico más utilizado para definir la AKI se basa en los cambios en la creatinina sérica. Las guías KDIGO, que constituyen el estándar internacional actual, establecen que existe AKI cuando la creatinina aumenta al menos 0,3 mg/dL en 48 horas, o cuando aumenta al menos 1,5 veces respecto al valor basal en 7 días, o cuando la diuresis desciende por debajo de 0,5 mL/kg/h durante 6 horas \parencite{kdigo2012aki}. De estos criterios, el más utilizado en la práctica clínica y en investigación es el basado en creatinina, porque es el más fácil de medir de forma objetiva.
 
-\begin{enumerate}
-    \item Objetivo específico 1.
-    \item Objetivo específico 2.
-    \item Objetivo específico 3.
-\end{enumerate}
+El problema es que la creatinina es un marcador funcional con un retraso inherente. La creatinina es un producto del metabolismo muscular que se filtra libremente en el glomérulo y se elimina por la orina. Cuando el riñón empieza a fallar, la cantidad de creatinina que se filtra disminuye y, por tanto, su concentración en sangre aumenta. Sin embargo, este aumento no es inmediato. La creatinina tiene que acumularse en el organismo antes de que su elevación sea detectable en una analítica, y este proceso puede tardar horas o incluso días.
 
-\section{Metodología}
-\label{sec:metodologia_intro}
+Esto significa que cuando el médico ve una creatinina elevada en los análisis del paciente, el daño renal ya lleva tiempo produciéndose. La ventana de oportunidad para actuar de forma preventiva se ha reducido considerablemente. En ese momento, las opciones se limitan a intentar frenar la progresión del daño y evitar que empeore, pero ya no es posible prevenir lo que ya ha ocurrido.
 
-\textit{Breve descripción de la metodología seguida.}
+Durante años se han buscado biomarcadores más precoces que pudieran detectar el daño renal antes de que la creatinina empiece a subir. Moléculas como la NGAL (\textit{Neutrophil Gelatinase-Associated Lipocalin}), la KIM-1 (\textit{Kidney Injury Molecule-1}) o la cistatina C han mostrado resultados prometedores en estudios de investigación. Sin embargo, ninguno de estos marcadores ha logrado implantarse de forma generalizada en la práctica clínica habitual, ya sea por cuestiones de coste, disponibilidad o falta de evidencia suficiente sobre su utilidad para guiar decisiones terapéuticas.
 
-\section{Estructura del trabajo}
-\label{sec:estructura}
+Esta situación ha llevado a explorar enfoques alternativos para la detección temprana. Si los biomarcadores individuales tienen limitaciones, quizá sea posible combinar múltiples variables clínicas para identificar patrones de riesgo antes de que el daño se manifieste. Y aquí es donde entran las técnicas de inteligencia artificial.
 
-\textit{Descripción de la estructura del documento.}
+\section{Inteligencia artificial y predicción clínica}
+
+Los hospitales modernos son, probablemente sin pretenderlo, enormes generadores de datos. Cada ingreso produce un rastro digital que incluye analíticas seriadas, registros de medicación, constantes vitales, diagnósticos codificados, notas clínicas, resultados de pruebas de imagen y mucho más. En un hospital de tamaño medio, hablamos de millones de registros acumulados a lo largo de los años.
+
+La mayor parte de esta información se utiliza exclusivamente para el seguimiento individual del paciente. El médico consulta los análisis de su paciente, revisa la evolución de sus constantes, comprueba qué medicación tiene prescrita. Pero rara vez se explota esta información de forma agregada para detectar patrones que permitan predecir complicaciones antes de que ocurran.
+
+Las técnicas de aprendizaje automático ofrecen precisamente esa posibilidad. Los algoritmos de \textit{machine learning} pueden analizar grandes volúmenes de datos históricos, encontrar relaciones entre variables y construir modelos capaces de estimar el riesgo de un evento futuro a partir de la información disponible en un momento dado. No se trata de sustituir el juicio clínico del médico, sino de proporcionarle una herramienta adicional que le ayude a priorizar su atención hacia los pacientes con mayor riesgo.
+
+En el campo específico de la predicción de AKI, esta aproximación ha generado resultados prometedores. El trabajo más conocido es probablemente el de Tomašev et al., publicado en la revista \textit{Nature} en 2019 \parencite{tomasev2019nature}. Este estudio, desarrollado en colaboración con DeepMind (la división de inteligencia artificial de Google), utilizó datos de más de 700.000 pacientes del sistema de salud del Departamento de Veteranos de Estados Unidos para entrenar un modelo de aprendizaje profundo. Los resultados mostraron que era posible predecir la aparición de AKI hasta 48 horas antes del diagnóstico clínico convencional, con un área bajo la curva ROC de 0,921.
+
+Otros grupos de investigación han obtenido resultados similares utilizando diferentes metodologías y poblaciones. Churpek et al. desarrollaron y validaron un modelo de \textit{machine learning} para predicción de AKI en pacientes hospitalizados, demostrando que el modelo mantenía su rendimiento cuando se validaba en hospitales diferentes a aquellos donde se había entrenado \parencite{churpek2020validation}. Koyner et al. construyeron un modelo específico para pacientes ingresados, utilizando variables disponibles de forma rutinaria en la historia clínica electrónica \parencite{koyner2018ml}. Lin et al. aplicaron Random Forest para predecir la mortalidad en pacientes con AKI en UCI, identificando las variables con mayor capacidad predictiva \parencite{lin2019randomforest}.
+
+Sin embargo, la literatura también es clara en sus advertencias sobre las limitaciones de estos modelos. Las revisiones sistemáticas más recientes han puesto de manifiesto que muchos de los estudios publicados presentan problemas metodológicos importantes \parencite{rank2022mlaki, shi2025aiaki}. Entre los problemas más frecuentes se encuentran la falta de validación externa (el modelo solo se prueba en los mismos datos donde se entrenó), el alto riesgo de sesgo según herramientas como PROBAST, la heterogeneidad en las definiciones de AKI utilizadas y la falta de información sobre la calibración de las probabilidades predichas.
+
+Además, la inmensa mayoría de los estudios publicados proceden de Estados Unidos o del norte de Europa. Las poblaciones de pacientes, los sistemas de salud, los patrones de prescripción farmacológica y las prácticas clínicas pueden ser diferentes en otros contextos. No está claro que un modelo entrenado con datos de hospitales americanos vaya a funcionar igual de bien en un hospital español, con sus propias características organizativas y poblacionales.
+
+Esta situación subraya la necesidad de desarrollar y evaluar modelos en entornos clínicos diversos, incluyendo el contexto sanitario español, que está notablemente infrarrepresentado en la literatura sobre predicción de AKI mediante inteligencia artificial.
+
+\section{Planteamiento del trabajo}
+
+Este Trabajo de Fin de Grado se sitúa en esa línea de investigación aplicada. El objetivo principal es desarrollar y evaluar un modelo de aprendizaje automático capaz de predecir la aparición de lesión renal aguda en las primeras 48 horas de ingreso hospitalario, utilizando datos clínicos reales procedentes de HM Hospitales.
+
+El trabajo se desarrolla en el contexto del Grado en Ingeniería Informática Biomédica de la Universidad Camilo José Cela, y aprovecha la posibilidad de acceder a la base de datos clínica Doctoris utilizada en los hospitales del grupo HM. Esta circunstancia ofrece una oportunidad poco habitual en trabajos académicos de grado: trabajar con datos hospitalarios reales, no simulados ni procedentes de repositorios públicos internacionales.
+
+Trabajar con datos reales introduce complejidades adicionales frente a los \textit{datasets} de laboratorio. La información clínica presenta valores ausentes, codificaciones heterogéneas, registros incompletos y particularidades derivadas de la práctica asistencial cotidiana. No todos los pacientes tienen todas las analíticas, no todas las prescripciones están correctamente codificadas, no todos los campos están cumplimentados de la misma manera. Esta realidad obliga a dedicar una parte sustancial del trabajo a la fase de ingeniería del dato: extracción, limpieza, transformación y validación de la información antes de poder utilizarla para entrenar modelos.
+
+El enfoque metodológico adoptado prioriza la interpretabilidad sobre la complejidad. Aunque existen arquitecturas más sofisticadas, como las redes neuronales profundas utilizadas por Tomašev et al. \parencite{tomasev2019nature}, estas requieren volúmenes de datos considerablemente mayores y plantean retos de interpretabilidad que dificultan su aceptación en entornos clínicos. Para una prueba de concepto desarrollada en el contexto de un TFG, con las limitaciones de tamaño muestral inherentes a una cohorte monocéntrica, resulta más adecuado emplear modelos cuyo funcionamiento interno pueda analizarse y cuyas predicciones puedan explicarse en términos clínicamente comprensibles.
+
+Por este motivo, los modelos seleccionados son la regresión logística y el Random Forest. La regresión logística es un modelo lineal ampliamente utilizado en investigación biomédica, cuya principal ventaja es la facilidad para interpretar los coeficientes en términos de \textit{odds ratios}. El Random Forest es un modelo de ensamble basado en árboles de decisión, capaz de capturar relaciones no lineales entre variables sin necesidad de especificarlas explícitamente. La comparación entre ambos permite contrastar el rendimiento de un enfoque interpretable y paramétrico frente a otro más flexible y no lineal.
+
+La variable objetivo se define como el desarrollo de AKI en las 48 horas siguientes al valor basal de creatinina del ingreso, adaptando el criterio de incremento absoluto de creatinina de las guías KDIGO \parencite{kdigo2012aki}. Como predictores se utilizan variables disponibles de forma rutinaria en el momento del ingreso: variables demográficas (edad, sexo), variables analíticas (creatinina basal, sodio, potasio) y variables farmacológicas (exposición a AINEs, IECAs, ARA-II, diuréticos, vancomicina y aminoglucósidos).
+
+Es importante señalar desde el principio que este trabajo constituye una prueba de concepto académica, no una herramienta lista para implantación clínica inmediata. El objetivo no es desarrollar un sistema de alertas que pueda ponerse en producción mañana en un hospital, sino demostrar la viabilidad técnica del enfoque, evaluar el rendimiento de modelos \textit{baseline} sobre datos reales, identificar qué variables parecen más relevantes para la predicción y sentar las bases para posibles desarrollos futuros más ambiciosos.
+
+\section{Estructura del documento}
+
+El presente documento se organiza en nueve capítulos, además de las referencias bibliográficas y los anexos. A continuación se describe brevemente el contenido de cada uno de ellos.
+
+El \textbf{Capítulo 2} presenta el marco teórico del trabajo. Se revisan en profundidad la definición y los criterios diagnósticos de la AKI según las guías KDIGO, la epidemiología de esta complicación tanto a nivel global como en el contexto hospitalario, los principales factores de riesgo con especial atención a la nefrotoxicidad farmacológica, y el estado del arte en predicción de AKI mediante técnicas de inteligencia artificial. También se presentan los fundamentos de los modelos de clasificación utilizados (regresión logística y Random Forest), las consideraciones especiales sobre evaluación de modelos en problemas con clases desbalanceadas, y la importancia de la interpretabilidad en modelos destinados a aplicaciones clínicas.
+
+El \textbf{Capítulo 3} expone la justificación del trabajo. Se argumenta la relevancia clínica del problema abordado, la oportunidad tecnológica que representan los datos hospitalarios estructurados y las técnicas de aprendizaje automático, y el contexto institucional en que se desarrolla el proyecto.
+
+El \textbf{Capítulo 4} detalla los objetivos del trabajo, tanto el objetivo general como los objetivos específicos que guían el desarrollo del proyecto.
+
+El \textbf{Capítulo 5} describe la metodología empleada. Se presenta el entorno técnico utilizado (SQL Server, Python, Jupyter Notebook, librerías científicas), se explica el proceso de definición de la cohorte de estudio, se detalla la construcción de la variable objetivo, se describen las variables predictoras incluidas en el modelo, se expone el preprocesamiento de datos realizado y se presenta la estrategia de modelado adoptada.
+
+El \textbf{Capítulo 6} presenta el desarrollo del trabajo propiamente dicho. Se describe el pipeline de análisis implementado, el análisis exploratorio inicial de los datos, las decisiones de ingeniería de variables adoptadas y el proceso de entrenamiento de los modelos.
+
+El \textbf{Capítulo 7} recoge los resultados obtenidos y su discusión. Se presentan las métricas de rendimiento de los modelos entrenados, el análisis del umbral de decisión, la interpretación de las variables más relevantes, una demostración del funcionamiento del modelo sobre casos simulados, y una discusión que incluye la interpretación clínica de los resultados, la comparación con la literatura existente y las limitaciones del estudio.
+
+El \textbf{Capítulo 8} presenta las conclusiones principales derivadas del trabajo realizado, sintetizando los hallazgos más relevantes y valorando el grado de cumplimiento de los objetivos planteados.
+
+El \textbf{Capítulo 9} propone líneas de trabajo futuro que podrían dar continuidad a este proyecto, identificando áreas de mejora y posibles extensiones.
+
+Finalmente, se incluyen las \textbf{referencias bibliográficas} citadas a lo largo del documento y varios \textbf{anexos} con información complementaria: un diccionario de variables con la descripción detallada de cada campo utilizado, el código SQL empleado para la extracción de la cohorte, y fragmentos de código Python correspondientes a las fases más relevantes del análisis.
 
 %% --- CAPÍTULO 2: MARCO TEÓRICO ---
 \chapter{Marco Teórico}
@@ -540,7 +579,7 @@ El desarrollo de este Trabajo de Fin de Grado responde a una confluencia de fact
 
 \section{Relevancia clínica del problema}
 \label{sec:relevancia}
-La lesión renal aguda representa una de las complicaciones más frecuentes y con mayor impacto pronóstico dentro del entorno hospitalario. Los datos epidemiológicos disponibles indican que entre el 10\% y el 15\% de los pacientes hospitalizados desarrollan algún grado de AKI durante su ingreso, cifra que asciende hasta el 50-60\% en unidades de cuidados intensivos \parencite{hoste2018epidemiology, hoste2015aki}. Las consecuencias de esta complicación trascienden el episodio agudo: los pacientes que desarrollan AKI presentan mayor mortalidad intrahospitalaria, estancias más prolongadas y un riesgo incrementado de progresar hacia enfermedad renal crónica a medio y largo plazo \parencite{chawla2014nejm}.
+La lesión renal aguda representa una de las complicaciones más frecuentes y con mayor impacto pronóstico dentro del entorno hospitalario. Los datos epidemiológicos disponibles indican que entre el 10\% y el 15\% de los pacientes hospitalizados desarrollan algún grado de AKI durante su ingreso, cifra que asciende hasta el 50-60\% en unidades de cuidados intensivos \parencite{hoste2018epidemiology, hoste2015akiepi}. Las consecuencias de esta complicación trascienden el episodio agudo: los pacientes que desarrollan AKI presentan mayor mortalidad intrahospitalaria, estancias más prolongadas y un riesgo incrementado de progresar hacia enfermedad renal crónica a medio y largo plazo \parencite{chawla2014akickd}.
 
 Desde una perspectiva de gestión sanitaria, la AKI supone también una carga económica considerable. La necesidad de tratamiento sustitutivo renal, la prolongación de los ingresos y las complicaciones asociadas generan costes que podrían reducirse si se actuara de forma preventiva sobre los pacientes con mayor riesgo. Este aspecto adquiere especial relevancia en un contexto de recursos sanitarios limitados, donde la optimización de la atención resulta prioritaria.
 
@@ -550,9 +589,9 @@ El problema central radica en que la detección de la AKI mediante marcadores co
 \label{sec:oportunidad}
 Los sistemas de información hospitalarios actuales generan volúmenes de datos que hace apenas dos décadas habrían resultado inmanejables. Cada ingreso produce decenas o cientos de registros estructurados: analíticas seriadas, prescripciones farmacológicas, constantes vitales, diagnósticos codificados, procedimientos realizados. Sin embargo, la mayor parte de esta información se utiliza exclusivamente para el seguimiento individual del paciente y rara vez se explota de forma sistemática para la estratificación del riesgo o la detección temprana de complicaciones.
 
-Las técnicas de aprendizaje automático ofrecen la posibilidad de extraer patrones predictivos de estos repositorios de datos clínicos. A diferencia de los modelos estadísticos tradicionales, los algoritmos de machine learning pueden manejar un número elevado de variables, capturar relaciones no lineales y adaptarse a la heterogeneidad propia de los datos hospitalarios reales. En el campo específico de la predicción de AKI, diversos estudios han demostrado que los modelos de aprendizaje automático pueden alcanzar un rendimiento discriminativo superior al de las escalas de riesgo convencionales \parencite{tomasev2019nature, churpek2020jama, rank2022systematic}.
+Las técnicas de aprendizaje automático ofrecen la posibilidad de extraer patrones predictivos de estos repositorios de datos clínicos. A diferencia de los modelos estadísticos tradicionales, los algoritmos de machine learning pueden manejar un número elevado de variables, capturar relaciones no lineales y adaptarse a la heterogeneidad propia de los datos hospitalarios reales. En el campo específico de la predicción de AKI, diversos estudios han demostrado que los modelos de aprendizaje automático pueden alcanzar un rendimiento discriminativo superior al de las escalas de riesgo convencionales \parencite{tomasev2019nature, churpek2020validation, rank2022mlaki}.
 
-No obstante, la literatura también señala limitaciones importantes. Muchos de los modelos publicados presentan alto riesgo de sesgo metodológico, carecen de validación externa y se han desarrollado sobre poblaciones específicas (principalmente estadounidenses o del norte de Europa) que pueden no ser directamente extrapolables a otros contextos \parencite{shi2025jamia}. Esta circunstancia subraya la necesidad de desarrollar y evaluar modelos en entornos clínicos diversos, incluyendo hospitales españoles con sus propias características poblacionales y organizativas.
+No obstante, la literatura también señala limitaciones importantes. Muchos de los modelos publicados presentan alto riesgo de sesgo metodológico, carecen de validación externa y se han desarrollado sobre poblaciones específicas (principalmente estadounidenses o del norte de Europa) que pueden no ser directamente extrapolables a otros contextos \parencite{shi2025aiaki}. Esta circunstancia subraya la necesidad de desarrollar y evaluar modelos en entornos clínicos diversos, incluyendo hospitales españoles con sus propias características poblacionales y organizativas.
 
 \section{Contexto institucional}
 \label{sec:institucional}
@@ -566,7 +605,7 @@ El acceso a Doctoris permite además construir una cohorte con características 
 \label{sec:enfoque}
 La elección de modelos de aprendizaje automático interpretables (regresión logística y Random Forest) responde a un criterio deliberado. Aunque existen arquitecturas más complejas, como las redes neuronales profundas utilizadas por Tomašev et al. \parencite{tomasev2019nature}, estas requieren volúmenes de datos considerablemente mayores y plantean retos de interpretabilidad que dificultan su aceptación en entornos clínicos. Para una prueba de concepto desarrollada en el contexto de un TFG, con las limitaciones de tamaño muestral inherentes a una cohorte monocéntrica, resulta más adecuado emplear modelos cuyo funcionamiento interno pueda analizarse y cuyas predicciones puedan explicarse en términos clínicamente comprensibles.
 
-La inclusión de variables farmacológicas como predictores merece también justificación específica. Diversos fármacos de uso hospitalario habitual presentan potencial nefrotóxico bien documentado: los antiinflamatorios no esteroideos alteran la hemodinámica glomerular, los aminoglucósidos y la vancomicina ejercen toxicidad tubular directa, y los inhibidores del sistema renina-angiotensina pueden precipitar deterioro funcional en pacientes con perfusión renal comprometida \parencite{perazella2019, perazella2022}. La exposición a estos agentes constituye un factor de riesgo modificable, lo que confiere especial interés a su incorporación en modelos predictivos orientados a la prevención.
+La inclusión de variables farmacológicas como predictores merece también justificación específica. Diversos fármacos de uso hospitalario habitual presentan potencial nefrotóxico bien documentado: los antiinflamatorios no esteroideos alteran la hemodinámica glomerular, los aminoglucósidos y la vancomicina ejercen toxicidad tubular directa, y los inhibidores del sistema renina-angiotensina pueden precipitar deterioro funcional en pacientes con perfusión renal comprometida \parencite{perazella2019drug, perazella2022drugaki}. La exposición a estos agentes constituye un factor de riesgo modificable, lo que confiere especial interés a su incorporación en modelos predictivos orientados a la prevención.
 
 \section{Alcance y limitaciones asumidas}
 \label{sec:alcance}
@@ -583,7 +622,7 @@ En síntesis, la justificación de este TFG descansa sobre tres pilares: la rele
 \section{Objetivo general}
 \label{sec:obj_general}
 
-\textit{Desarrollar y evaluar un modelo de aprendizaje automático para predecir la aparición de lesión renal aguda en las primeras 48 horas de ingreso hospitalario, utilizando datos clínicos disponibles al momento del ingreso.}
+Desarrollar y evaluar un modelo de aprendizaje automático para predecir la aparición de lesión renal aguda en las primeras 48 horas de ingreso hospitalario, utilizando datos clínicos disponibles al momento del ingreso.
 
 \section{Objetivos específicos}
 \label{sec:obj_especificos}
@@ -600,61 +639,669 @@ En síntesis, la justificación de este TFG descansa sobre tres pilares: la rele
 \chapter{Metodología}
 \label{chap:metodologia}
 
-En este apartado se describe la metodología seguida para alcanzar los objetivos planteados.
+Este capítulo describe el enfoque metodológico seguido para el desarrollo del trabajo. Se presenta el entorno técnico utilizado, el proceso de definición de la cohorte de estudio, la construcción de la variable objetivo, las variables predictoras seleccionadas, el preprocesamiento aplicado y la estrategia de modelado adoptada.
 
-\section{Fuente de datos}
-\label{sec:fuente_datos}
+\section{Entorno técnico}
 
-\textit{Descripción de la base de datos utilizada (MIMIC-IV).}
+El desarrollo del proyecto requirió la combinación de varias herramientas orientadas a la extracción, preparación, análisis y modelado de datos clínicos. La selección de estas herramientas respondió a criterios de disponibilidad institucional, robustez, adecuación metodológica y capacidad para construir un flujo de trabajo reproducible.
 
-\section{Criterios de inclusión y exclusión}
-\label{sec:criterios}
+\subsection{Base de datos y extracción: SQL Server y Doctoris}
 
-\textit{Definición de los criterios para la selección de pacientes.}
+La fuente primaria de datos fue la base de datos clínica Doctoris, utilizada en los hospitales del grupo HM para el registro estructurado de información relacionada con pacientes, ingresos, resultados de laboratorio y tratamientos farmacológicos. A diferencia de otros enfoques basados en texto libre o historias clínicas no estructuradas, este trabajo utilizó exclusivamente datos tabulares y codificados, lo que permitió desarrollar un proceso de extracción más controlado y reproducible.
 
-\section{Definición de AKI}
-\label{sec:definicion_aki}
+El acceso a Doctoris se realizó mediante Microsoft SQL Server. Esta plataforma permitió construir consultas complejas para definir la cohorte de estudio, integrar información procedente de múltiples tablas (pacientes, ingresos, laboratorio, medicación) y generar un dataset estructurado con una fila por ingreso hospitalario. La lógica de extracción se implementó mediante una query maestra que utilizó expresiones comunes de tabla (CTEs), funciones de ventana y agregaciones condicionales para transformar los datos clínicos brutos en una estructura analítica coherente.
 
-\textit{Criterios utilizados para definir la variable objetivo.}
+Las principales tablas utilizadas fueron:
+
+\begin{itemize}
+    \item \textbf{Pacientes}: información demográfica básica, incluyendo identificador interno, identificador anonimizado, fecha de nacimiento y sexo.
+    \item \textbf{Ingresos}: datos del episodio hospitalario, incluyendo identificador de ingreso, fechas de ingreso y alta, hospital y servicio.
+    \item \textbf{Laboratorio\_Orden} y \textbf{LaboratorioResultados\_lab}: resultados analíticos con código de prueba, valor numérico, unidades y fecha de extracción.
+    \item \textbf{TratamientoFarm} y tablas auxiliares de farmacología: prescripciones farmacológicas durante el ingreso, con información del principio activo.
+\end{itemize}
+
+El resultado de esta fase fue un fichero CSV con 1.175 filas (una por ingreso) y 24 columnas, que constituyó el punto de partida para el análisis posterior en Python.
+
+\subsection{Entorno de análisis: Python y Jupyter Notebook}
+
+El núcleo del trabajo analítico se desarrolló en Python, utilizando Jupyter Notebook como entorno de trabajo interactivo. Python fue seleccionado por su amplia adopción en ciencia de datos, su versatilidad para el tratamiento de datos estructurados y su ecosistema consolidado de librerías para aprendizaje automático.
+
+La estructura del proyecto se organizó en varios notebooks especializados, cada uno centrado en una fase concreta del pipeline:
+
+\begin{enumerate}
+    \item Exploración inicial del dato
+    \item Limpieza y preprocesamiento
+    \item Ingeniería de variables
+    \item Construcción del dataset final
+    \item Entrenamiento de modelos
+    \item Evaluación de modelos
+    \item Interpretación de modelos
+    \item Demostración sobre casos simulados
+\end{enumerate}
+
+Esta organización modular permitió separar claramente las diferentes etapas del trabajo, facilitando la trazabilidad de las decisiones y la reproducibilidad del análisis.
+
+\subsection{Librerías utilizadas}
+
+Para el desarrollo del pipeline analítico se utilizaron las siguientes librerías del ecosistema científico de Python:
+
+\textbf{Pandas} fue la librería principal para la manipulación de datos tabulares. Se utilizó en tareas como la carga del fichero CSV, la asignación de tipos de datos, la detección y tratamiento de valores nulos, la transformación de variables y la construcción de los diferentes datasets intermedios.
+
+\textbf{NumPy} se empleó como apoyo para operaciones numéricas y transformaciones sobre arrays, complementando las funcionalidades de Pandas en ciertas operaciones de cálculo.
+
+\textbf{Matplotlib} y \textbf{Seaborn} se utilizaron para la representación gráfica de resultados. Estas librerías permitieron visualizar distribuciones de variables, matrices de correlación, curvas ROC y otros elementos necesarios para comprender el comportamiento del dataset y de los modelos entrenados.
+
+\textbf{Scikit-learn} constituyó la librería central para el desarrollo de los modelos de aprendizaje automático. Se empleó para la separación entre conjuntos de entrenamiento y prueba, la imputación de valores ausentes, el entrenamiento de los modelos (regresión logística y Random Forest), el cálculo de métricas de rendimiento y la construcción de pipelines de preprocesamiento.
+
+\textbf{Joblib} se utilizó para la serialización y almacenamiento de los modelos entrenados, permitiendo su reutilización posterior en la fase de demostración.
+
+\subsection{Control de versiones}
+
+Como práctica de buena gestión del proyecto, se utilizó Git como sistema de control de versiones. Esto permitió mantener un historial de cambios en el código, facilitar la recuperación de versiones anteriores y documentar la evolución del trabajo a lo largo del tiempo. Aunque el proyecto no involucró desarrollo colaborativo, el uso de control de versiones constituye una práctica recomendada en proyectos de ciencia de datos que favorece la reproducibilidad y la trazabilidad.
+
+\section{Definición de la cohorte}
+
+La cohorte del estudio se definió con el objetivo de obtener un conjunto de ingresos hospitalarios que cumplieran criterios específicos de inclusión y que dispusieran de la información necesaria para construir tanto la variable objetivo como las variables predictoras.
+
+\subsection{Unidad de análisis}
+
+La unidad de análisis seleccionada fue el ingreso hospitalario, no el paciente. Esta decisión tiene sentido clínico: un mismo paciente puede tener riesgo muy diferente de desarrollar AKI en distintas hospitalizaciones, dependiendo de su situación basal, los tratamientos recibidos y el contexto clínico de cada episodio. Tratar cada ingreso como una observación independiente permite capturar esta variabilidad.
+
+\subsection{Criterios de inclusión}
+
+Para formar parte de la cohorte, cada ingreso debía cumplir los siguientes criterios:
+
+\begin{enumerate}
+    \item \textbf{Fecha de ingreso válida}: se excluyeron registros con fechas ausentes o inconsistentes.
+    \item \textbf{Periodo de estudio}: se restringió el análisis a ingresos a partir de enero de 2024, periodo con mayor densidad de datos clínicos enlazables.
+    \item \textbf{Identificador anonimizado disponible}: necesario para mantener la trazabilidad del paciente dentro del marco de anonimización.
+    \item \textbf{Analítica disponible durante el ingreso}: imprescindible para poder definir tanto las variables predictoras analíticas como la variable objetivo basada en creatinina.
+\end{enumerate}
+
+\subsection{Proceso de enlace entre ingresos y laboratorio}
+
+Un aspecto técnicamente relevante fue que la relación entre ingresos y resultados de laboratorio no venía dada de forma directa en la base de datos. Fue necesario reconstruir el vínculo mediante la coincidencia del identificador de paciente y la verificación de que la fecha de la muestra analítica estuviera comprendida entre la fecha de ingreso y la fecha de alta del episodio.
+
+Esta lógica de enlace temporal permitió asociar los resultados de laboratorio al contexto clínico del ingreso correspondiente, aunque también introdujo una restricción: solo pudieron incluirse en la cohorte aquellos episodios con laboratorio efectivamente enlazable dentro de dicha ventana temporal.
+
+\subsection{Tamaño final de la cohorte}
+
+Tras aplicar todos los criterios de inclusión, la cohorte final quedó compuesta por \textbf{1.175 ingresos hospitalarios}. Esta cifra representa una fracción reducida del volumen bruto de ingresos históricos disponibles en la base de datos, lo que refleja una realidad común en proyectos de inteligencia artificial aplicada a datos clínicos: la disponibilidad efectiva de información utilizable para modelado suele ser muy inferior al tamaño total de las bases de datos.
+
+\section{Construcción de la variable objetivo}
+
+La variable objetivo del estudio fue \textbf{AKI\_48h}, definida como la aparición de lesión renal aguda en las 48 horas posteriores al valor basal de creatinina del ingreso.
+
+\subsection{Definición operativa}
+
+El criterio utilizado para definir AKI fue un incremento de la creatinina sérica de al menos 0,3 mg/dL respecto al valor basal, siguiendo una adaptación simplificada del criterio KDIGO de incremento absoluto en 48 horas \parencite{kdigo2012aki}.
+
+Formalmente, la variable se definió como:
+
+\begin{equation}
+\text{AKI\_48h} = 
+\begin{cases}
+1 & \text{si } \text{MaxCreatinina48h} \geq \text{BaselineCreatinina} + 0{,}3 \\
+0 & \text{en caso contrario}
+\end{cases}
+\end{equation}
+
+Donde:
+\begin{itemize}
+    \item \textbf{BaselineCreatinina}: primera creatinina disponible del ingreso, utilizada como valor de referencia.
+    \item \textbf{MaxCreatinina48h}: valor máximo de creatinina observado en las 48 horas posteriores al baseline.
+\end{itemize}
+
+\subsection{Proceso de construcción}
+
+La construcción de la variable objetivo siguió varios pasos:
+
+\begin{enumerate}
+    \item Identificación de todas las determinaciones de creatinina (código de prueba CREA) realizadas durante cada ingreso.
+    \item Ordenación cronológica de las determinaciones dentro de cada episodio.
+    \item Selección de la primera creatinina como valor baseline.
+    \item Cálculo del valor máximo de creatinina en las 48 horas posteriores al baseline.
+    \item Aplicación del criterio de incremento $\geq$ 0,3 mg/dL para etiquetar cada ingreso.
+\end{enumerate}
+
+\subsection{Distribución de la variable objetivo}
+
+La distribución resultante mostró un marcado desbalanceo de clases:
+
+\begin{itemize}
+    \item \textbf{Casos positivos (AKI\_48h = 1)}: 29 ingresos (2,5\%)
+    \item \textbf{Casos negativos (AKI\_48h = 0)}: 1.146 ingresos (97,5\%)
+\end{itemize}
+
+Esta prevalencia tan baja del evento positivo condicionó de forma directa tanto la estrategia de modelado como la selección de métricas de evaluación, aspectos que se desarrollan más adelante en este capítulo.
+
+\section{Variables predictoras}
+
+El conjunto de variables predictoras se seleccionó buscando un equilibrio entre relevancia clínica, disponibilidad en la base de datos y viabilidad metodológica. Las variables se organizaron en cuatro categorías: demográficas, analíticas, farmacológicas y derivadas.
+
+\subsection{Variables demográficas}
+
+Se incluyeron dos variables demográficas básicas:
+
+\begin{itemize}
+    \item \textbf{Sexo}: variable binaria (0 = mujer, 1 = hombre), recodificada a partir de la codificación original de la base de datos.
+    \item \textbf{EdadAproxIngreso}: edad del paciente en años al momento del ingreso, calculada como la diferencia entre la fecha de nacimiento y la fecha de ingreso.
+\end{itemize}
+
+La edad es un factor de riesgo bien establecido para el desarrollo de AKI, dado que la función renal tiende a deteriorarse con el envejecimiento y los pacientes mayores suelen presentar más comorbilidades y mayor exposición a fármacos potencialmente nefrotóxicos.
+
+\subsection{Variables analíticas}
+
+Se seleccionaron tres variables analíticas correspondientes a la primera determinación disponible durante el ingreso:
+
+\begin{itemize}
+    \item \textbf{BaselineCreatinina}: creatinina sérica basal en mg/dL. Esta variable refleja el estado de la función renal al inicio del episodio y constituye el punto de referencia para la definición de AKI.
+    \item \textbf{Potasio\_mmol\_L}: concentración de potasio sérico en mmol/L. Las alteraciones del potasio pueden asociarse a disfunción renal y a determinadas situaciones clínicas de riesgo.
+    \item \textbf{Sodio\_mmol\_L}: concentración de sodio sérico en mmol/L. Las alteraciones del sodio, especialmente la hiponatremia, pueden indicar situaciones de sobrecarga de volumen o depleción que se relacionan con el riesgo renal.
+\end{itemize}
+
+La variable \textbf{Urea\_mg\_dL} fue inicialmente extraída pero posteriormente excluida debido a su muy baja disponibilidad (menos del 4\% de los ingresos tenían este dato), lo que la hacía inviable para su uso como predictor.
+
+\subsection{Variables farmacológicas}
+
+Se construyeron seis variables binarias indicando la exposición a grupos farmacológicos con potencial nefrotóxico durante el ingreso:
+
+\begin{itemize}
+    \item \textbf{AINE}: exposición a antiinflamatorios no esteroideos (ibuprofeno, naproxeno, diclofenaco, etc.).
+    \item \textbf{IECA}: exposición a inhibidores de la enzima convertidora de angiotensina (enalapril, ramipril, etc.).
+    \item \textbf{ARAII}: exposición a antagonistas de los receptores de angiotensina II (losartán, valsartán, etc.).
+    \item \textbf{DIURETICO}: exposición a diuréticos (furosemida, torasemida, hidroclorotiazida, etc.).
+    \item \textbf{VANCOMICINA}: exposición a vancomicina, antibiótico con nefrotoxicidad bien documentada.
+    \item \textbf{AMINOGLUCOSIDO}: exposición a aminoglucósidos (gentamicina, amikacina, etc.), antibióticos con conocido potencial nefrotóxico.
+\end{itemize}
+
+Estas variables se construyeron a partir de la tabla de tratamiento farmacológico, enlazando con las tablas de catálogo de fármacos para identificar el principio activo y agregando a nivel de ingreso mediante búsquedas textuales sobre nombres de medicamentos.
+
+La justificación clínica para incluir estos grupos farmacológicos se basa en la literatura sobre nefrotoxicidad inducida por fármacos \parencite{perazella2019drug, perazella2022drugaki}. Los AINEs alteran la hemodinámica glomerular al inhibir las prostaglandinas vasodilatadoras. Los IECAs y ARA-II pueden precipitar deterioro funcional en pacientes con perfusión renal comprometida. Los aminoglucósidos y la vancomicina ejercen toxicidad tubular directa. Los diuréticos, aunque no son directamente nefrotóxicos, pueden contribuir a situaciones de depleción de volumen que favorecen el daño renal.
+
+\subsection{Variables derivadas}
+
+Se crearon dos variables derivadas con el objetivo de enriquecer la representación del problema:
+
+\begin{itemize}
+    \item \textbf{Edad\_ge\_65}: variable binaria que indica si el paciente tiene 65 años o más. El umbral de 65 años es un punto de corte habitual en la literatura para identificar pacientes de edad avanzada con mayor vulnerabilidad.
+    \item \textbf{N\_Farmacos\_Riesgo}: variable numérica que cuenta el número de grupos farmacológicos de riesgo a los que está expuesto el paciente (suma de AINE, IECA, ARAII, DIURETICO, VANCOMICINA y AMINOGLUCOSIDO). Esta variable sintetiza la carga farmacológica potencialmente nefrotóxica en una única medida.
+\end{itemize}
+
+\subsection{Variables excluidas}
+
+Varias variables disponibles en la extracción inicial fueron excluidas del modelado por diferentes motivos:
+
+\begin{itemize}
+    \item \textbf{Identificadores} (IdIngreso, UUIdPaciente, IdHospital, IdDoctor): no constituyen predictores clínicos y su inclusión introduciría señales espurias.
+    \item \textbf{Variables temporales} (FechaIngreso, FechaAlta, fechas de laboratorio): podrían utilizarse para construir nuevas características, pero se optó por un enfoque inicial más simple.
+    \item \textbf{MaxCreatinina48h}: esta variable forma parte de la definición del desenlace, por lo que su inclusión como predictor constituiría una fuga de información.
+    \item \textbf{Creatinina\_mg\_dL}: presentaba una correlación de 1,00 con BaselineCreatinina (coincidencia exacta en el 99,57\% de los casos), por lo que se eliminó por redundancia.
+    \item \textbf{Urea\_mg\_dL}: disponibilidad inferior al 4\%, inviable para modelado.
+\end{itemize}
+
+\subsection{Resumen del conjunto de predictores}
+
+El dataset final de modelado quedó compuesto por \textbf{13 variables predictoras}:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\hline
+\textbf{Variable} & \textbf{Tipo} & \textbf{Descripción} \\
+\hline
+Sexo & Binaria & 0 = mujer, 1 = hombre \\
+EdadAproxIngreso & Continua & Edad en años \\
+Edad\_ge\_65 & Binaria & 1 si edad $\geq$ 65 \\
+BaselineCreatinina & Continua & Creatinina basal (mg/dL) \\
+Potasio\_mmol\_L & Continua & Potasio sérico (mmol/L) \\
+Sodio\_mmol\_L & Continua & Sodio sérico (mmol/L) \\
+AINE & Binaria & Exposición a AINEs \\
+IECA & Binaria & Exposición a IECAs \\
+ARAII & Binaria & Exposición a ARA-II \\
+DIURETICO & Binaria & Exposición a diuréticos \\
+VANCOMICINA & Binaria & Exposición a vancomicina \\
+AMINOGLUCOSIDO & Binaria & Exposición a aminoglucósidos \\
+N\_Farmacos\_Riesgo & Discreta & Número de fármacos de riesgo (0-6) \\
+\hline
+\end{tabular}
+\caption{Variables predictoras incluidas en el modelo}
+\label{tab:variables}
+\end{table}
 
 \section{Preprocesamiento de datos}
-\label{sec:preprocesamiento}
 
-\textit{Limpieza, transformación e imputación de datos.}
+Antes del modelado, los datos requirieron un proceso de limpieza y transformación para garantizar su calidad y adecuación a los algoritmos de aprendizaje automático.
 
-\section{Ingeniería de características}
-\label{sec:feature_engineering}
+\subsection{Validación estructural}
 
-\textit{Creación y selección de variables predictoras.}
+Se verificó que el dataset cumplía las características esperadas:
 
-\section{Modelos de Machine Learning}
-\label{sec:modelos_ml}
+\begin{itemize}
+    \item 1.175 observaciones correspondientes a ingresos únicos (sin duplicados).
+    \item Granularidad correcta: una fila por ingreso hospitalario.
+    \item Alineación correcta de columnas tras la importación del CSV.
+\end{itemize}
 
-\textit{Descripción de los algoritmos utilizados y su configuración.}
+\subsection{Conversión de tipos de datos}
 
-\section{Métricas de evaluación}
-\label{sec:metricas}
+Durante la importación se detectó que los valores decimales habían sido exportados con coma decimal en lugar de punto (formato europeo). Esto impedía su interpretación automática como valores numéricos. Se aplicó una transformación para reemplazar las comas por puntos y convertir las columnas afectadas a tipo numérico.
 
-\textit{Métricas utilizadas para evaluar el rendimiento de los modelos.}
+Las variables se tiparon de la siguiente manera:
+\begin{itemize}
+    \item Variables continuas (creatinina, potasio, sodio): tipo float.
+    \item Variables binarias y discretas: tipo int.
+    \item Variable objetivo (AKI\_48h): tipo int.
+\end{itemize}
+
+\subsection{Tratamiento de valores ausentes}
+
+El análisis de completitud mostró que la mayoría de las variables tenían cobertura completa, con excepción de las tres variables analíticas continuas:
+
+\begin{itemize}
+    \item Potasio\_mmol\_L: 4,51\% de valores ausentes
+    \item Sodio\_mmol\_L: 4,17\% de valores ausentes
+    \item BaselineCreatinina: 0,17\% de valores ausentes
+\end{itemize}
+
+Dado que estos porcentajes eran relativamente bajos y que la eliminación de casos incompletos habría reducido aún más el ya limitado número de eventos positivos, se optó por una estrategia de \textbf{imputación por mediana}. Esta técnica es robusta frente a valores extremos y resulta apropiada para biomarcadores clínicos cuya distribución puede no ser simétrica.
+
+La imputación se integró dentro del pipeline de modelado para garantizar que los valores de imputación se calcularan exclusivamente sobre el conjunto de entrenamiento y se aplicaran después al conjunto de prueba, evitando así fuga de información.
+
+\subsection{Recodificación de variables}
+
+La variable Sexo, originalmente codificada como 1/2 en la base de datos, fue transformada a codificación 0/1 para facilitar su interpretación en los modelos (0 = mujer, 1 = hombre).
+
+\section{Estrategia de modelado}
+
+La estrategia de modelado se diseñó teniendo en cuenta las características específicas del problema: tamaño muestral moderado, fuerte desbalanceo de clases y objetivo de construir modelos interpretables.
+
+\subsection{Partición de datos}
+
+El dataset se dividió en un conjunto de entrenamiento (80\%) y un conjunto de prueba (20\%), utilizando una semilla aleatoria fija para garantizar la reproducibilidad. La partición se realizó de forma \textbf{estratificada}, manteniendo la proporción de clases aproximadamente constante en ambos subconjuntos.
+
+Tras la partición:
+\begin{itemize}
+    \item \textbf{Conjunto de entrenamiento}: 940 observaciones (917 negativos, 23 positivos)
+    \item \textbf{Conjunto de prueba}: 235 observaciones (229 negativos, 6 positivos)
+\end{itemize}
+
+La estratificación resultó imprescindible dado el bajo número de eventos positivos. Una partición aleatoria simple podría haber generado subconjuntos con distribuciones de clase poco representativas.
+
+\subsection{Modelos seleccionados}
+
+Se entrenaron dos modelos de clasificación:
+
+\textbf{Regresión logística}: modelo lineal que estima la probabilidad de pertenencia a la clase positiva mediante una función logística. Sus principales ventajas son la interpretabilidad (los coeficientes pueden expresarse como odds ratios) y su amplio uso en investigación biomédica. Se configuró con un máximo de 1.000 iteraciones para asegurar la convergencia.
+
+\textbf{Random Forest}: modelo de ensamble basado en múltiples árboles de decisión entrenados sobre submuestras aleatorias de los datos. Cada árbol vota por una clase y la predicción final se obtiene por agregación. Sus ventajas incluyen la capacidad de capturar relaciones no lineales, la robustez frente al sobreajuste y la posibilidad de estimar la importancia relativa de las variables. Se configuró con 200 árboles (n\_estimators = 200).
+
+Ambos modelos se configuraron con \textbf{class\_weight = 'balanced'}, opción que pondera automáticamente las clases de forma inversamente proporcional a su frecuencia. Esto ayuda a contrarrestar la tendencia de los algoritmos a favorecer la clase mayoritaria en problemas desbalanceados.
+
+\subsection{Pipeline de modelado}
+
+El preprocesamiento y el modelado se integraron en un pipeline único utilizando las herramientas de Scikit-learn. Esto garantizó que:
+
+\begin{enumerate}
+    \item Los parámetros de imputación se ajustaran solo sobre el conjunto de entrenamiento.
+    \item El mismo preprocesamiento se aplicara de forma consistente al conjunto de prueba.
+    \item El flujo fuera reproducible y menos propenso a errores.
+\end{enumerate}
+
+\subsection{Métricas de evaluación}
+
+Dado el fuerte desbalanceo de clases, la \textit{accuracy} (exactitud global) resultaría engañosa como métrica principal: un modelo que predijera siempre la clase negativa alcanzaría un 97,5\% de accuracy sin aportar ninguna utilidad práctica.
+
+Por este motivo, la evaluación se basó en métricas más apropiadas para problemas con evento infrecuente:
+
+\begin{itemize}
+    \item \textbf{ROC-AUC}: área bajo la curva ROC, que mide la capacidad global del modelo para discriminar entre clases independientemente del umbral de decisión.
+    \item \textbf{Recall} (sensibilidad): proporción de casos positivos correctamente identificados. Especialmente relevante en contextos clínicos donde interesa detectar a los pacientes en riesgo.
+    \item \textbf{Precision}: proporción de predicciones positivas que son correctas. Indica la fiabilidad de las alertas generadas.
+    \item \textbf{F1-score}: media armónica de precision y recall, útil como medida de equilibrio entre ambas.
+    \item \textbf{Matriz de confusión}: permite visualizar los verdaderos positivos, verdaderos negativos, falsos positivos y falsos negativos.
+\end{itemize}
+
+Adicionalmente, se realizó un análisis del umbral de decisión para evaluar cómo variaba el rendimiento del modelo al modificar el punto de corte para la clasificación binaria, dado que el umbral estándar de 0,5 puede no ser óptimo en problemas muy desbalanceados.
 
 %% --- CAPÍTULO 6: DESARROLLO ---
 \chapter{Desarrollo del Trabajo}
 \label{chap:desarrollo}
 
-\section{Exploración de datos}
-\label{sec:exploracion}
+Este capítulo describe el desarrollo técnico del proyecto, desde la exploración inicial de los datos hasta el entrenamiento de los modelos predictivos. Se detallan las decisiones tomadas en cada fase, los problemas encontrados y las soluciones adoptadas.
 
-\textit{Análisis exploratorio de los datos.}
+\section{Organización del pipeline de análisis}
 
-\section{Preparación del conjunto de datos}
-\label{sec:preparacion}
+El trabajo técnico se estructuró en una secuencia de notebooks de Jupyter, cada uno dedicado a una fase específica del proceso analítico. Esta organización modular permitió mantener la trazabilidad de las decisiones, facilitar la depuración de errores y garantizar la reproducibilidad del análisis.
 
-\textit{Proceso de creación del dataset final.}
+Los notebooks desarrollados fueron los siguientes:
+
+\begin{enumerate}
+    \item \textbf{01\_data\_exploration}: exploración inicial del dataset importado, validación estructural y análisis descriptivo preliminar.
+    \item \textbf{02\_data\_cleaning}: limpieza de datos, corrección de tipos, tratamiento de incidencias de importación.
+    \item \textbf{03\_feature\_engineering}: análisis de correlaciones, detección de redundancias, creación de variables derivadas.
+    \item \textbf{04\_dataset\_creation}: construcción del dataset final de modelado, selección definitiva de predictores.
+    \item \textbf{05\_model\_training}: partición de datos, configuración de pipelines, entrenamiento de modelos.
+    \item \textbf{06\_model\_evaluation}: cálculo de métricas, matrices de confusión, curvas ROC, comparación de modelos.
+    \item \textbf{07\_model\_interpretation}: análisis de coeficientes e importancias, interpretación clínica de resultados.
+    \item \textbf{08\_demo\_prediction}: demostración del sistema sobre casos clínicos simulados.
+\end{enumerate}
+
+Esta estructura refleja un flujo de trabajo típico en proyectos de ciencia de datos aplicada, donde cada fase construye sobre los resultados de la anterior y produce artefactos (datasets intermedios, modelos serializados, figuras) que quedan documentados y pueden reutilizarse.
+
+\section{Análisis exploratorio inicial}
+
+La primera fase del trabajo analítico consistió en examinar el dataset exportado desde SQL Server para validar su estructura, caracterizar las variables disponibles e identificar posibles problemas que pudieran comprometer las fases posteriores.
+
+\subsection{Validación de la estructura del dataset}
+
+Tras la importación del fichero CSV, se realizaron las siguientes comprobaciones:
+
+\begin{itemize}
+    \item \textbf{Dimensiones}: el dataset contenía 1.175 filas y 24 columnas, coincidiendo con lo esperado según la query de extracción.
+    \item \textbf{Unicidad}: se verificó que no existían filas duplicadas y que cada valor de IdIngreso era único, confirmando la granularidad de una observación por ingreso hospitalario.
+    \item \textbf{Alineación de columnas}: se comprobó que los nombres de las columnas correspondían correctamente con su contenido, descartando desplazamientos producidos durante la exportación.
+\end{itemize}
+
+Durante esta validación se detectó una incidencia relevante: el fichero CSV utilizaba punto y coma como separador de campos (formato europeo) y no incluía fila de cabecera. Fue necesario especificar explícitamente el separador en la importación y asignar manualmente los nombres de las columnas según el orden definido en la query SQL.
+
+\subsection{Análisis de completitud}
+
+El estudio de valores ausentes reveló un patrón heterogéneo de disponibilidad entre variables:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrr}
+\hline
+\textbf{Variable} & \textbf{Valores ausentes} & \textbf{Porcentaje} \\
+\hline
+Urea\_mg\_dL & 1.134 & 96,5\% \\
+Potasio\_mmol\_L & 53 & 4,5\% \\
+Sodio\_mmol\_L & 49 & 4,2\% \\
+BaselineCreatinina & 2 & 0,2\% \\
+Resto de variables & 0 & 0,0\% \\
+\hline
+\end{tabular}
+\caption{Análisis de valores ausentes en el dataset}
+\label{tab:missing}
+\end{table}
+
+La variable Urea\_mg\_dL presentaba una disponibilidad extremadamente baja, con menos del 4\% de los ingresos con valor registrado. Esta situación la hacía inviable como predictor, por lo que se decidió su exclusión del análisis. Las variables de potasio y sodio mostraban tasas de ausencia moderadas pero manejables mediante imputación. La creatinina basal tenía una completitud prácticamente total.
+
+\subsection{Distribución de la variable objetivo}
+
+El análisis de la variable AKI\_48h confirmó el marcado desbalanceo de clases anticipado:
+
+\begin{itemize}
+    \item Casos negativos (AKI\_48h = 0): 1.146 ingresos (97,5\%)
+    \item Casos positivos (AKI\_48h = 1): 29 ingresos (2,5\%)
+\end{itemize}
+
+Esta distribución tiene implicaciones metodológicas importantes. Con solo 29 eventos positivos en toda la cohorte, y aproximadamente 6 en el conjunto de prueba tras la partición, las estimaciones de rendimiento están sujetas a considerable variabilidad. Un solo caso positivo correctamente clasificado o no puede hacer variar el recall en más de 15 puntos porcentuales.
+
+El desbalanceo también condiciona la interpretación de las métricas. Un modelo que predijera siempre la clase negativa alcanzaría una exactitud del 97,5\%, pero sería completamente inútil para el propósito clínico de identificar pacientes en riesgo. Por este motivo, desde el inicio se planificó basar la evaluación en métricas como ROC-AUC, recall y F1-score, más informativas en este contexto.
+
+\subsection{Incidencia del formato decimal}
+
+Durante la exploración de las variables numéricas se detectó un problema técnico que habría comprometido el análisis de no haberse identificado a tiempo. Al intentar convertir las columnas analíticas (creatinina, potasio, sodio) a tipo numérico, se generaba un número anormalmente alto de valores nulos.
+
+La inspección manual de los valores reveló la causa: los decimales habían sido exportados con coma en lugar de punto (por ejemplo, ``0,96'' en lugar de ``0.96''). Este formato, habitual en configuraciones regionales europeas, no es reconocido automáticamente por las funciones de conversión numérica de Python.
+
+La solución consistió en aplicar una transformación previa que reemplazara las comas por puntos antes de la conversión a tipo float. Este paso, aparentemente menor, fue crítico para preservar la integridad de los biomarcadores analíticos, que constituyen predictores centrales del modelo.
+
+\subsection{Estadísticos descriptivos de las variables continuas}
+
+Una vez resueltos los problemas de formato, se calcularon los estadísticos descriptivos de las principales variables numéricas:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrrrr}
+\hline
+\textbf{Variable} & \textbf{Media} & \textbf{DE} & \textbf{Mín} & \textbf{Mediana} & \textbf{Máx} \\
+\hline
+EdadAproxIngreso & 58,3 & 19,2 & 0 & 61 & 99 \\
+BaselineCreatinina & 0,91 & 0,48 & 0,20 & 0,82 & 7,85 \\
+Potasio\_mmol\_L & 4,21 & 0,52 & 2,60 & 4,20 & 7,10 \\
+Sodio\_mmol\_L & 139,8 & 3,8 & 121 & 140 & 152 \\
+\hline
+\end{tabular}
+\caption{Estadísticos descriptivos de las variables continuas}
+\label{tab:descriptivos}
+\end{table}
+
+Los valores observados resultaron coherentes con lo esperado en una población hospitalaria general. La creatinina basal mostró una mediana de 0,82 mg/dL, con valores que oscilaban entre 0,20 y 7,85 mg/dL. Los valores extremos superiores corresponden probablemente a pacientes con enfermedad renal crónica previa, y no fueron eliminados al no constituir errores de medición sino situaciones clínicas reales.
+
+\subsection{Distribución de las variables farmacológicas}
+
+Las variables binarias de exposición farmacológica mostraron frecuencias variables:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lr}
+\hline
+\textbf{Variable} & \textbf{Frecuencia (\%)} \\
+\hline
+DIURETICO & 18,7\% \\
+AINE & 15,2\% \\
+IECA & 8,3\% \\
+ARAII & 6,1\% \\
+VANCOMICINA & 2,8\% \\
+AMINOGLUCOSIDO & 0,9\% \\
+\hline
+\end{tabular}
+\caption{Frecuencia de exposición a fármacos de riesgo}
+\label{tab:farmacos}
+\end{table}
+
+Los diuréticos y los AINEs fueron los grupos más frecuentes, lo cual tiene sentido dado su amplio uso hospitalario. La vancomicina y especialmente los aminoglucósidos mostraron frecuencias muy bajas, lo que limita la capacidad de los modelos para estimar de forma estable su contribución al riesgo.
+
+\section{Ingeniería de variables}
+
+La fase de ingeniería de variables se planteó desde una perspectiva deliberadamente conservadora. En lugar de generar un gran número de características derivadas, se priorizó la parsimonia y la interpretabilidad, teniendo en cuenta las limitaciones impuestas por el tamaño muestral y el número reducido de eventos positivos.
+
+\subsection{Análisis de correlaciones}
+
+Como paso previo a cualquier transformación, se analizó la matriz de correlaciones entre las variables numéricas del dataset. El hallazgo más relevante fue la correlación prácticamente perfecta (r = 1,00) entre las variables Creatinina\_mg\_dL y BaselineCreatinina.
+
+Una inspección más detallada reveló que ambas variables coincidían exactamente en 1.170 de las 1.175 observaciones (99,57\%). Las cinco discrepancias correspondían a casos donde existían múltiples determinaciones de creatinina en fechas muy próximas, generando pequeñas diferencias entre el valor del primer laboratorio y el valor asignado como baseline.
+
+Esta redundancia tenía implicaciones claras para el modelado:
+
+\begin{itemize}
+    \item Mantener ambas variables no aportaría información adicional al modelo.
+    \item En regresión logística, la colinealidad perfecta generaría inestabilidad en la estimación de coeficientes.
+    \item La interpretación de los resultados se complicaría innecesariamente.
+\end{itemize}
+
+Por estos motivos, se decidió conservar únicamente BaselineCreatinina, por ser la representación más coherente con la lógica temporal del estudio (valor de referencia para la definición del desenlace).
+
+\subsection{Creación de variables derivadas}
+
+Se generaron dos variables derivadas con justificación clínica clara:
+
+\textbf{Edad\_ge\_65}: variable binaria que toma valor 1 si el paciente tiene 65 años o más, y 0 en caso contrario. El umbral de 65 años es un punto de corte ampliamente utilizado en la literatura médica para identificar pacientes de edad avanzada con mayor vulnerabilidad. Esta variable complementa a la edad continua, permitiendo capturar un posible efecto umbral que un modelo lineal no detectaría automáticamente.
+
+\textbf{N\_Farmacos\_Riesgo}: variable discreta que cuenta el número de grupos farmacológicos de riesgo a los que está expuesto el paciente durante el ingreso. Se calcula como la suma de las seis variables farmacológicas binarias (AINE, IECA, ARAII, DIURETICO, VANCOMICINA, AMINOGLUCOSIDO), pudiendo tomar valores de 0 a 6.
+
+La inclusión de N\_Farmacos\_Riesgo responde a la hipótesis de que la acumulación de exposiciones nefrotóxicas podría tener un efecto aditivo sobre el riesgo. En lugar de depender exclusivamente de la interpretación individual de cada fármaco, esta variable sintetiza la carga farmacológica global en una única medida.
+
+\subsection{Relación preliminar con el desenlace}
+
+Se exploró de forma descriptiva la relación entre las variables derivadas y la variable objetivo:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrr}
+\hline
+\textbf{Edad\_ge\_65} & \textbf{N} & \textbf{\% AKI} \\
+\hline
+0 (< 65 años) & 512 & 1,8\% \\
+1 ($\geq$ 65 años) & 663 & 3,0\% \\
+\hline
+\end{tabular}
+\caption{Distribución de AKI según grupo de edad}
+\label{tab:edad_aki}
+\end{table}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrr}
+\hline
+\textbf{N\_Farmacos\_Riesgo} & \textbf{N} & \textbf{\% AKI} \\
+\hline
+0 & 687 & 1,9\% \\
+1 & 358 & 2,5\% \\
+2 & 108 & 4,6\% \\
+3+ & 22 & 9,1\% \\
+\hline
+\end{tabular}
+\caption{Distribución de AKI según número de fármacos de riesgo}
+\label{tab:nfarmacos_aki}
+\end{table}
+
+Los datos sugieren una tendencia hacia mayor frecuencia de AKI en pacientes de edad avanzada y en aquellos expuestos a múltiples fármacos de riesgo. Sin embargo, dado el bajo número de eventos positivos, estas diferencias deben interpretarse con cautela y no permiten establecer conclusiones inferenciales sólidas. Su utilidad principal fue confirmar que las variables derivadas mostraban un comportamiento coherente con las hipótesis clínicas subyacentes.
+
+\subsection{Variables excluidas del modelado}
+
+Durante esta fase se formalizó la exclusión de varias variables que no debían formar parte del conjunto de predictores:
+
+\begin{itemize}
+    \item \textbf{Identificadores} (IdIngreso, UUIdPaciente, IdHospital, IdSociedad, IdDoctor): campos administrativos sin valor predictivo clínico.
+    \item \textbf{Fechas} (FechaIngreso, FechaAlta, PrimeraFechaLab, BaselineFecha): podrían usarse para derivar características temporales, pero se optó por un enfoque inicial más simple.
+    \item \textbf{MaxCreatinina48h}: forma parte de la definición del desenlace; su inclusión constituiría fuga de información.
+    \item \textbf{Creatinina\_mg\_dL}: redundante con BaselineCreatinina (correlación = 1,00).
+    \item \textbf{Urea\_mg\_dL}: disponibilidad inferior al 4\%, inviable para modelado.
+    \item \textbf{Diff\_Creatininas}: variable auxiliar creada para análisis, sin sentido como predictor clínico.
+\end{itemize}
+
+\section{Construcción del dataset final}
+
+Tras el análisis exploratorio y la ingeniería de variables, se procedió a consolidar el dataset definitivo que serviría de entrada para los modelos predictivos.
+
+\subsection{Selección final de variables}
+
+El conjunto de predictores quedó definido por las siguientes 13 variables:
+
+\begin{itemize}
+    \item Variables demográficas: Sexo, EdadAproxIngreso, Edad\_ge\_65
+    \item Variables analíticas: BaselineCreatinina, Potasio\_mmol\_L, Sodio\_mmol\_L
+    \item Variables farmacológicas: AINE, IECA, ARAII, DIURETICO, VANCOMICINA, AMINOGLUCOSIDO
+    \item Variables derivadas: N\_Farmacos\_Riesgo
+\end{itemize}
+
+La variable objetivo fue AKI\_48h.
+
+\subsection{Estructura del dataset final}
+
+El dataset final presentaba las siguientes características:
+
+\begin{itemize}
+    \item \textbf{Observaciones}: 1.175 ingresos hospitalarios
+    \item \textbf{Predictores}: 13 variables
+    \item \textbf{Variable objetivo}: 1 variable binaria
+    \item \textbf{Valores ausentes}: concentrados en Potasio (4,5\%), Sodio (4,2\%) y BaselineCreatinina (0,2\%)
+\end{itemize}
+
+\subsection{Separación de predictores y objetivo}
+
+Se realizó la separación formal entre la matriz de predictores X (1.175 × 13) y el vector objetivo y (1.175 × 1), siguiendo el formato estándar requerido por las librerías de aprendizaje automático de Python.
+
+El dataset final se almacenó como fichero CSV independiente en la carpeta de datos procesados, permitiendo su reutilización directa en los notebooks posteriores sin necesidad de repetir todo el preprocesamiento.
 
 \section{Entrenamiento de modelos}
-\label{sec:entrenamiento}
 
-\textit{Descripción del proceso de entrenamiento.}
+La fase de entrenamiento se diseñó para producir modelos baseline sólidos y comparables, sin pretender una optimización exhaustiva de hiperparámetros.
+
+\subsection{Partición de datos}
+
+El dataset se dividió en conjunto de entrenamiento (80\%) y conjunto de prueba (20\%) mediante la función train\_test\_split de Scikit-learn, con los siguientes parámetros:
+
+\begin{itemize}
+    \item \texttt{test\_size = 0.2}
+    \item \texttt{random\_state = 42} (semilla fija para reproducibilidad)
+    \item \texttt{stratify = y} (partición estratificada por la variable objetivo)
+\end{itemize}
+
+La estratificación garantizó que la proporción de casos positivos fuera aproximadamente igual en ambos subconjuntos:
+
+\begin{itemize}
+    \item Entrenamiento: 940 observaciones (917 negativos, 23 positivos)
+    \item Prueba: 235 observaciones (229 negativos, 6 positivos)
+\end{itemize}
+
+\subsection{Construcción del pipeline de preprocesamiento}
+
+Para garantizar que el preprocesamiento se aplicara de forma consistente y sin fuga de información, se construyó un pipeline integrado que incluía:
+
+\begin{enumerate}
+    \item \textbf{Imputación}: se utilizó SimpleImputer con estrategia de mediana para las variables continuas con valores ausentes. La mediana se calculó exclusivamente sobre el conjunto de entrenamiento.
+    \item \textbf{Modelado}: el modelo de clasificación (regresión logística o Random Forest) se añadió como paso final del pipeline.
+\end{enumerate}
+
+Este enfoque aseguró que:
+\begin{itemize}
+    \item Los valores de imputación no incorporaran información del conjunto de prueba.
+    \item El mismo preprocesamiento se aplicara automáticamente a nuevos datos.
+    \item El flujo fuera reproducible y menos propenso a errores manuales.
+\end{itemize}
+
+\subsection{Configuración de la regresión logística}
+
+El modelo de regresión logística se configuró con los siguientes parámetros:
+
+\begin{itemize}
+    \item \texttt{max\_iter = 1000}: número máximo de iteraciones para garantizar la convergencia del algoritmo de optimización.
+    \item \texttt{class\_weight = 'balanced'}: ponderación automática de las clases inversamente proporcional a su frecuencia, para contrarrestar el desbalanceo.
+    \item \texttt{random\_state = 42}: semilla fija para reproducibilidad.
+    \item \texttt{solver = 'lbfgs'}: algoritmo de optimización por defecto, adecuado para datasets de tamaño moderado.
+\end{itemize}
+
+La opción de ponderación balanceada hace que el algoritmo penalice más los errores sobre la clase minoritaria, incentivando al modelo a no ignorarla completamente en favor de maximizar la exactitud global.
+
+\subsection{Configuración del Random Forest}
+
+El modelo Random Forest se configuró con los siguientes parámetros:
+
+\begin{itemize}
+    \item \texttt{n\_estimators = 200}: número de árboles en el bosque.
+    \item \texttt{class\_weight = 'balanced'}: misma estrategia de ponderación que en la regresión logística.
+    \item \texttt{random\_state = 42}: semilla fija para reproducibilidad.
+    \item Resto de parámetros: valores por defecto de Scikit-learn.
+\end{itemize}
+
+No se realizó una búsqueda exhaustiva de hiperparámetros (grid search o random search) porque el objetivo era establecer una línea base razonable, no optimizar el rendimiento al máximo. Con solo 23 eventos positivos en el conjunto de entrenamiento, una optimización agresiva habría incrementado el riesgo de sobreajuste sin garantías de mejora real en datos nuevos.
+
+\subsection{Proceso de entrenamiento}
+
+El entrenamiento de ambos modelos se realizó mediante el método \texttt{fit()} sobre el conjunto de entrenamiento. El proceso fue rápido (segundos) dado el tamaño moderado del dataset.
+
+Tras el entrenamiento, los pipelines completos (preprocesamiento + modelo) se serializaron mediante Joblib para su reutilización posterior en la fase de demostración.
+
+\subsection{Observaciones durante el entrenamiento}
+
+Durante el entrenamiento se observó que:
+
+\begin{itemize}
+    \item La regresión logística convergió sin problemas dentro del límite de iteraciones establecido.
+    \item El Random Forest no emitió advertencias de ningún tipo.
+    \item Ambos modelos produjeron probabilidades en el rango [0, 1] para todas las observaciones, sin valores anómalos.
+\end{itemize}
+
+El hecho de que los modelos se entrenaran sin incidencias no garantiza que su rendimiento sea bueno, pero sí indica que la estructura del dataset era compatible con los algoritmos utilizados y que no existían problemas técnicos que impidieran el aprendizaje.
+
+\section{Consideraciones sobre reproducibilidad}
+
+A lo largo de todo el desarrollo se adoptaron medidas para garantizar la reproducibilidad del trabajo:
+
+\begin{itemize}
+    \item \textbf{Semillas aleatorias fijas}: todas las operaciones con componente aleatorio (partición de datos, entrenamiento de modelos) utilizaron semillas fijas documentadas.
+    \item \textbf{Versionado de datos}: cada fase del pipeline generó un dataset intermedio almacenado como fichero independiente, permitiendo reconstruir cualquier estado anterior.
+    \item \textbf{Documentación en notebooks}: cada decisión metodológica quedó documentada junto al código que la implementaba.
+    \item \textbf{Serialización de modelos}: los modelos entrenados se guardaron en formato serializado para su reutilización exacta.
+    \item \textbf{Control de versiones}: el proyecto se gestionó mediante Git, manteniendo un historial de cambios.
+\end{itemize}
+
+Estas prácticas permiten que cualquier persona con acceso al código y los datos originales pueda reproducir exactamente los resultados obtenidos, requisito fundamental en trabajos de investigación aplicada.
 
 %% Ejemplo de figura
 %% \begin{figure}[H]
@@ -686,22 +1333,22 @@ En este apartado se describe la metodología seguida para alcanzar los objetivos
 \section{Análisis descriptivo de la muestra}
 \label{sec:descriptivo}
 
-\textit{Características de la población de estudio.}
+Características de la población de estudio.
 
 \section{Rendimiento de los modelos}
 \label{sec:rendimiento}
 
-\textit{Comparación del rendimiento de los diferentes modelos.}
+Comparación del rendimiento de los diferentes modelos.
 
 \section{Interpretabilidad del modelo}
 \label{sec:interpretabilidad}
 
-\textit{Análisis de la importancia de variables y explicabilidad.}
+Análisis de la importancia de variables y explicabilidad.
 
 \section{Discusión}
 \label{sec:discusion}
 
-\textit{Análisis crítico de los resultados obtenidos y comparación con la literatura.}
+Análisis crítico de los resultados obtenidos y comparación con la literatura.
 
 %% --- CAPÍTULO 8: CONCLUSIONES ---
 \chapter{Conclusiones}
