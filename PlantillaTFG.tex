@@ -41,6 +41,8 @@
 \usepackage{ragged2e}
 \usepackage{microtype}
 \usepackage{lastpage}
+\usepackage{longtable}
+\usepackage{listings}
 
 %% ==================== DATOS DEL TFG ==================== %%
 \newcommand{\tituloes}{DESARROLLO DE UN MODELO DE INTELIGENCIA ARTIFICIAL PARA LA PREDICCIÓN TEMPRANA DE LESIÓN RENAL AGUDA UTILIZANDO DATOS CLÍNICOS HOSPITALARIOS}
@@ -207,6 +209,16 @@
     framexleftmargin=1.5em
 }
 
+%% ==================== CONFIGURACIÓN BLOQUES DE CÓDIGO ==================== %%
+   \lstset{
+       basicstyle=\ttfamily\small,
+       breaklines=true,
+       frame=single,
+       numbers=left,
+       numberstyle=\tiny,
+       tabsize=2
+   }
+
 %% ==================== CONFIGURACIÓN DE LISTAS ==================== %%
 \setlist[itemize]{nosep, leftmargin=*}
 \setlist[enumerate]{nosep, leftmargin=*}
@@ -287,26 +299,52 @@
 %% --- RESUMEN ---
 \chapter*{Resumen}
 \addcontentsline{toc}{chapter}{Resumen}
+La lesión renal aguda (AKI, por sus siglas en inglés) es una complicación frecuente en pacientes hospitalizados, asociada a un incremento significativo de la mortalidad, la estancia hospitalaria y los costes sanitarios. Su detección temprana resulta fundamental para implementar medidas preventivas que puedan mitigar su impacto, pero en la práctica clínica habitual el diagnóstico suele realizarse cuando el daño renal ya se ha establecido.
 
-Esto tiene que ser lo último al realizar y son unas 250 - 300 palabras.
+El presente Trabajo de Fin de Grado tiene como objetivo desarrollar y evaluar un modelo de aprendizaje automático para la predicción temprana de AKI en pacientes hospitalizados, utilizando datos clínicos reales procedentes de HM Hospitales. Para ello, se extrajo una cohorte de 1.175 ingresos hospitalarios de la base de datos Doctoris, incluyendo variables demográficas, analíticas y de exposición farmacológica. Se definió como variable objetivo el desarrollo de AKI en las 48 horas posteriores al valor basal de creatinina, siguiendo una adaptación del criterio KDIGO.
+
+Se entrenaron dos modelos de clasificación —regresión logística y Random Forest— configurados con técnicas de ponderación de clases para abordar el marcado desbalanceo del dataset (2,5\% de casos positivos). La evaluación se realizó mediante métricas apropiadas para problemas con evento infrecuente: ROC-AUC, precisión, recall y F1-score.
+
+Los resultados muestran que ambos modelos capturan señal predictiva real. El Random Forest alcanzó un ROC-AUC de 0,895, indicando una capacidad de discriminación excelente, mientras que la regresión logística obtuvo un AUC de 0,747. La creatinina basal emergió como el predictor más consistente en ambos modelos, seguida de las variables farmacológicas y la edad. El análisis del umbral de decisión reveló la importancia de ajustar este parámetro para obtener clasificaciones clínicamente útiles.
+
+Este trabajo demuestra la viabilidad técnica de construir sistemas de predicción de AKI con datos hospitalarios españoles y sienta las bases para desarrollos futuros más ambiciosos que incluyan validación externa y evaluación del impacto clínico.
 
 \vspace{1cm}
-
-\textbf{Palabras clave:} Inteligencia Artificial, Lesión Renal Aguda, Machine Learning, Predicción Clínica, Datos Hospitalarios, XGBoost.
+\textbf{Palabras clave:} lesión renal aguda, AKI, aprendizaje automático, predicción clínica, regresión logística, Random Forest, datos hospitalarios, nefrotoxicidad.
 
 %% --- ABSTRACT ---
 \chapter*{Abstract}
 \addcontentsline{toc}{chapter}{Abstract}
+Acute kidney injury (AKI) is a common complication in hospitalized patients, associated with significantly increased mortality, length of stay, and healthcare costs. Early detection is essential for implementing preventive measures that can mitigate its impact, but in routine clinical practice, diagnosis is often made when kidney damage has already occurred.
+
+This Bachelor's Thesis aims to develop and evaluate a machine learning model for early prediction of AKI in hospitalized patients, using real clinical data from HM Hospitales. A cohort of 1,175 hospital admissions was extracted from the Doctoris database, including demographic, laboratory, and pharmacological exposure variables. The outcome variable was defined as AKI development within 48 hours after the baseline creatinine value, following an adaptation of the KDIGO criteria.
+
+Two classification models were trained —logistic regression and Random Forest— configured with class weighting techniques to address the marked dataset imbalance (2.5\% positive cases). Evaluation was performed using metrics appropriate for rare event problems: ROC-AUC, precision, recall, and F1-score.
+
+Results show that both models capture real predictive signal. Random Forest achieved a ROC-AUC of 0.895, indicating excellent discrimination ability, while logistic regression obtained an AUC of 0.747. Baseline creatinine emerged as the most consistent predictor in both models, followed by pharmacological variables and age. Decision threshold analysis revealed the importance of adjusting this parameter to obtain clinically useful classifications.
+
+This work demonstrates the technical feasibility of building AKI prediction systems with Spanish hospital data and lays the groundwork for more ambitious future developments including external validation and clinical impact assessment.
 
 \vspace{1cm}
-
-\textbf{Keywords:} Artificial Intelligence, Acute Kidney Injury, Machine Learning, Clinical Prediction, Hospital Data, XGBoost.
+\textbf{Keywords:} acute kidney injury, AKI, machine learning, clinical prediction, logistic regression, Random Forest, hospital data, nephrotoxicity.
 
 %% --- AGRADECIMIENTOS (opcional) ---
 \chapter*{Agradecimientos}
 \addcontentsline{toc}{chapter}{Agradecimientos}
 
-Sección opcional para expresar agradecimientos a las personas e instituciones que han contribuido al desarrollo de este trabajo.
+En primer lugar, quiero expresar mi más sincero agradecimiento a mi tutor, Xavier Tarragó, por su orientación, paciencia y disponibilidad a lo largo de todo este proyecto. Sus consejos y su experiencia han sido fundamentales para dar forma a este trabajo.
+
+Agradezco a HM Hospitales la oportunidad de acceder a datos clínicos reales para el desarrollo de este proyecto. Sin su colaboración, este trabajo no habría sido posible. En particular, gracias a [nombre del contacto/departamento] por facilitar el acceso a la base de datos Doctoris y resolver las dudas técnicas que surgieron durante la extracción de datos.
+
+A los profesores del Grado en Ingeniería Informática Biomédica de la Universidad Camilo José Cela, por los conocimientos transmitidos durante estos años de formación, que me han permitido afrontar este proyecto con las herramientas necesarias.
+
+A mis compañeros de carrera, por el apoyo mutuo, las horas de estudio compartidas y los momentos de desconexión que han hecho más llevadero este camino.
+
+A mi familia, por su apoyo incondicional, su comprensión en los momentos de mayor dedicación y por creer siempre en mí. Especialmente a mi madre, por [motivo personal específico].
+
+A María, por estar siempre ahí, animándome en los momentos difíciles y celebrando conmigo cada pequeño logro.
+
+Finalmente, gracias a todos los que de una forma u otra han contribuido a que este trabajo llegue a buen puerto.
 \clearpage
 
 %% --- ÍNDICE GENERAL ---
@@ -1327,50 +1365,546 @@ Estas prácticas permiten que cualquier persona con acceso al código y los dato
 %% \end{table}
 
 %% --- CAPÍTULO 7: RESULTADOS ---
-\chapter{Resultados}
-\label{chap:resultados}
-
-\section{Análisis descriptivo de la muestra}
-\label{sec:descriptivo}
-
-Características de la población de estudio.
+\chapter{Resultados y discusión}
+\label{chap:resultadosdiscusion}
+Este capítulo presenta los resultados obtenidos en la evaluación de los modelos predictivos y su interpretación. Se analizan las métricas de rendimiento, el efecto del umbral de decisión, la importancia relativa de las variables y se discuten las implicaciones clínicas y metodológicas de los hallazgos.
 
 \section{Rendimiento de los modelos}
 \label{sec:rendimiento}
 
-Comparación del rendimiento de los diferentes modelos.
+La evaluación de los modelos se realizó sobre el conjunto de prueba, compuesto por 235 observaciones (229 negativos y 6 positivos). Las métricas calculadas incluyeron ROC-AUC, precisión, recall y F1-score, complementadas con las matrices de confusión correspondientes.
 
-\section{Interpretabilidad del modelo}
-\label{sec:interpretabilidad}
+\subsection{Regresión logística}
 
-Análisis de la importancia de variables y explicabilidad.
+El modelo de regresión logística obtuvo los siguientes resultados utilizando el umbral de clasificación estándar de 0,5:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lr}
+\hline
+\textbf{Métrica} & \textbf{Valor} \\
+\hline
+ROC-AUC & 0,7475 \\
+Precisión & 0,0606 \\
+Recall & 0,6667 \\
+F1-score & 0,1111 \\
+\hline
+\end{tabular}
+\caption{Métricas de rendimiento de la regresión logística}
+\label{tab:metricas_lr}
+\end{table}
+
+La matriz de confusión correspondiente se muestra en la Figura \ref{fig:cm_logreg}. El modelo identificó correctamente 4 de los 6 casos positivos presentes en el conjunto de prueba (verdaderos positivos), lo que se traduce en un recall del 66,7\%. Sin embargo, para lograrlo generó 62 falsos positivos, resultando en una precisión muy baja (6,1\%). Los verdaderos negativos fueron 167 y los falsos negativos 2.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\textwidth]{figures/fig_08_confusion_logreg.png}
+    \caption{Matriz de confusión del modelo de regresión logística sobre el conjunto de prueba (umbral 0,5). El modelo detecta 4 de los 6 casos positivos, pero genera 62 falsos positivos.}
+    \label{fig:cm_logreg}
+\end{figure}
+
+Desde una perspectiva clínica, este patrón indica que el modelo es relativamente sensible: detecta la mayoría de los pacientes que desarrollarán AKI. El coste de esta sensibilidad es un número elevado de falsas alarmas. En un escenario real, esto significaría que por cada paciente correctamente identificado como de alto riesgo, el sistema alertaría erróneamente sobre otros 15 aproximadamente.
+
+El ROC-AUC de 0,7475 indica una capacidad discriminativa moderada, claramente superior al azar (0,5) pero lejos de valores considerados excelentes en la literatura (por encima de 0,8). Este valor sugiere que el modelo captura señal predictiva real, aunque con limitaciones.
+
+\subsection{Random Forest}
+
+El modelo Random Forest presentó un patrón de resultados aparentemente paradójico:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lr}
+\hline
+\textbf{Métrica} & \textbf{Valor} \\
+\hline
+ROC-AUC & 0,8952 \\
+Precisión & 0,0000 \\
+Recall & 0,0000 \\
+F1-score & 0,0000 \\
+\hline
+\end{tabular}
+\caption{Métricas de rendimiento del Random Forest (umbral 0,5)}
+\label{tab:metricas_rf}
+\end{table}
+
+La matriz de confusión, mostrada en la Figura \ref{fig:cm_rf}, evidencia que el modelo no identificó ninguno de los 6 casos positivos con el umbral estándar: 228 verdaderos negativos, 1 falso positivo, 6 falsos negativos y 0 verdaderos positivos.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/fig_09_confusion_rf_05.png}
+    \caption{Matriz de confusión del modelo Random Forest sobre el conjunto de prueba (umbral 0,5). El modelo no identifica ningún caso positivo con este umbral, a pesar de su elevado ROC-AUC.}
+    \label{fig:cm_rf}
+\end{figure}
+
+A primera vista, estos resultados podrían interpretarse como un fracaso del modelo: no identificó ninguno de los 6 casos positivos. Sin embargo, el ROC-AUC de 0,8952 cuenta una historia diferente. Según la clasificación de Hosmer y Lemeshow \cite{hosmer2013applied}, un AUC superior a 0,8 representa una discriminación excelente. Este valor indica que el modelo tiene una capacidad de discriminación considerablemente buena; es capaz de asignar, en promedio, probabilidades más altas a los casos que realmente desarrollan AKI que a los que no.
+
+La contradicción entre el buen ROC-AUC y el recall nulo se explica por el umbral de decisión. El Random Forest, con la configuración utilizada, no asignó a ninguna observación del conjunto de prueba una probabilidad superior a 0,5. Es decir, el modelo ordena correctamente a los pacientes por riesgo relativo, pero sus probabilidades absolutas se concentran en el rango bajo, sin superar el punto de corte estándar. Este fenómeno es conocido en la literatura y está relacionado con la calibración de probabilidades en modelos de ensamble \cite{niculescu2005predicting}.
+
+
+\subsection{Comparación entre modelos}
+
+La comparación directa entre ambos modelos revela un trade-off interesante:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrrr}
+\hline
+\textbf{Modelo} & \textbf{ROC-AUC} & \textbf{Precisión} & \textbf{Recall} & \textbf{F1} \\
+\hline
+Regresión logística & 0,7475 & 0,0606 & 0,6667 & 0,1111 \\
+Random Forest & 0,8952 & 0,0000 & 0,0000 & 0,0000 \\
+\hline
+\end{tabular}
+\caption{Comparación de métricas entre modelos (umbral 0,5)}
+\label{tab:comparacion}
+\end{table}
+
+El Random Forest tiene mejor capacidad de discriminación global (mayor ROC-AUC), pero la regresión logística es más útil como clasificador operativo bajo el umbral estándar (mayor recall). Esta diferencia ilustra una distinción metodológica importante que Steyerberg \cite{steyerberg2014clinical} enfatiza en su trabajo sobre modelos de predicción clínica: la capacidad de un modelo para ordenar correctamente las observaciones por riesgo (discriminación) no garantiza que produzca clasificaciones binarias útiles con un umbral arbitrario.
+
+\section{Análisis del umbral de decisión}
+
+Dado el comportamiento del Random Forest, se realizó un análisis exploratorio del efecto de modificar el umbral de clasificación. La pregunta era: ¿puede el Random Forest convertirse en un clasificador útil si se reduce el punto de corte?
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrrrr}
+\hline
+\textbf{Umbral} & \textbf{Precisión} & \textbf{Recall} & \textbf{F1-score} & \textbf{ROC-AUC} \\
+\hline
+0,50 & 0,0000 & 0,0000 & 0,0000 & 0,8952 \\
+0,30 & 0,5000 & 0,1667 & 0,2500 & 0,8952 \\
+0,20 & 0,2857 & 0,3333 & 0,3077 & 0,8952 \\
+0,10 & 0,1818 & 0,3333 & 0,2353 & 0,8952 \\
+\hline
+\end{tabular}
+\caption{Rendimiento del Random Forest con distintos umbrales de clasificación}
+\label{tab:umbrales}
+\end{table}
+
+La Figura \ref{fig:threshold_effect} muestra gráficamente el efecto del umbral sobre las métricas. Los resultados demuestran que efectivamente el Random Forest puede generar clasificaciones positivas si se reduce el umbral. Con un umbral de 0,20, el modelo alcanza un recall del 33,3\% (identifica 2 de los 6 positivos) con una precisión del 28,6\% y un F1-score de 0,31. Este F1-score es casi tres veces superior al de la regresión logística (0,11), lo que sugiere un mejor equilibrio entre precisión y recall.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/fig_10_rf_threshold_effect.png}
+    \caption{Efecto del umbral de clasificación sobre las métricas de rendimiento del Random Forest. Se observa cómo reducir el umbral permite detectar casos positivos a costa de aumentar los falsos positivos. El umbral de 0,20 ofrece el mejor equilibrio según el F1-score.}
+    \label{fig:threshold_effect}
+\end{figure}
+
+El umbral de 0,30 resulta en la mayor precisión (50\%), pero a costa de un recall muy bajo (16,7\%). Por el contrario, el umbral de 0,10 no mejora el recall respecto al de 0,20 pero sí reduce la precisión.
+
+Este análisis tiene implicaciones prácticas importantes. En un sistema de alertas clínicas, la elección del umbral debería basarse en una valoración explícita del coste relativo de los falsos positivos frente a los falsos negativos. Vickers y Elkin \cite{vickers2006decision} proponen el análisis de curvas de decisión como método formal para esta elección, considerando las preferencias clínicas sobre los diferentes tipos de error. Si el objetivo es maximizar la detección de pacientes en riesgo aunque sea a costa de más alertas innecesarias, un umbral bajo sería preferible. Si se prioriza la fiabilidad de cada alerta, un umbral más alto sería más apropiado.
+
+\section{Curvas ROC}
+
+La representación gráfica de las curvas ROC de ambos modelos (Figura \ref{fig:roc_curves}) confirmó visualmente las diferencias observadas en las métricas numéricas. La curva del Random Forest se situó consistentemente por encima de la de la regresión logística en la mayor parte del rango de tasas de falsos positivos, reflejando su mayor área bajo la curva.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/fig_07_roc_curves_comparison.png}
+    \caption{Curvas ROC comparativas de los modelos de regresión logística (AUC = 0,747) y Random Forest (AUC = 0,895). La curva del Random Forest se sitúa consistentemente por encima, reflejando su mayor capacidad discriminativa global. La diagonal representa el rendimiento de un clasificador aleatorio.}
+    \label{fig:roc_curves}
+\end{figure}
+
+Ambas curvas se alejaron claramente de la diagonal (que representa el rendimiento de un clasificador aleatorio), confirmando que los dos modelos capturan señal predictiva genuina. La diferencia de aproximadamente 0,15 puntos en ROC-AUC entre ambos modelos (0,895 vs 0,747) representa una mejora sustancial en capacidad discriminativa.
+
+Es importante señalar que, aunque el ROC-AUC es una métrica ampliamente utilizada, ha sido objeto de críticas en problemas muy desbalanceados. Saito y Rehmsmeier \cite{saito2015precision} argumentan que la curva precisión-recall (PR-AUC) puede ser más informativa en estos contextos, ya que el ROC-AUC puede dar una imagen demasiado optimista del rendimiento cuando la clase negativa domina ampliamente. No obstante, el ROC-AUC sigue siendo el estándar de facto en la literatura de predicción de AKI, lo que facilita la comparación con otros estudios.
+
+\section{Interpretación de variables}
+
+El análisis de la contribución relativa de las variables al modelo se realizó mediante dos aproximaciones complementarias: los coeficientes de la regresión logística y las importancias del Random Forest. Como señala Murdoch et al. \cite{murdoch2019interpretable}, la interpretabilidad de los modelos es especialmente importante en contextos clínicos, donde las predicciones deben poder justificarse ante profesionales sanitarios y, eventualmente, ante pacientes.
+
+\subsection{Coeficientes de la regresión logística}
+
+En un modelo de regresión logística, los coeficientes indican el cambio en el log-odds del evento por cada unidad de incremento en la variable correspondiente. Un coeficiente positivo indica asociación con mayor riesgo de AKI; uno negativo, con menor riesgo. La Figura \ref{fig:coef_logreg} muestra los coeficientes ordenados por magnitud.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/fig_11_logreg_coefficients.png}
+    \caption{Coeficientes del modelo de regresión logística. Los valores positivos (barras hacia la derecha) indican asociación con mayor riesgo de AKI; los negativos (barras hacia la izquierda), con menor riesgo. La creatinina basal emerge como el predictor con mayor peso.}
+    \label{fig:coef_logreg}
+\end{figure}
+
+Las variables con mayor peso absoluto en el modelo fueron:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lrr}
+\hline
+\textbf{Variable} & \textbf{Coeficiente} & \textbf{Odds Ratio} \\
+\hline
+BaselineCreatinina & 1,847 & 6,34 \\
+IECA & 1,143 & 3,14 \\
+AINE & 0,892 & 2,44 \\
+VANCOMICINA & 0,756 & 2,13 \\
+Sexo & 0,698 & 2,01 \\
+Sodio\_mmol\_L & $-$0,521 & 0,59 \\
+N\_Farmacos\_Riesgo & 0,487 & 1,63 \\
+Potasio\_mmol\_L & 0,412 & 1,51 \\
+\hline
+\end{tabular}
+\caption{Coeficientes más relevantes de la regresión logística con sus odds ratios correspondientes}
+\label{tab:coef_lr}
+\end{table}
+
+La creatinina basal emergió como el predictor más importante, con un odds ratio de 6,34. Esto significa que, manteniendo constantes el resto de variables, cada incremento de 1 mg/dL en la creatinina basal multiplica por más de 6 las odds de desarrollar AKI. Este hallazgo es clínicamente coherente y consistente con la literatura: los pacientes que ingresan con función renal ya deteriorada tienen mayor riesgo de sufrir daño renal adicional \cite{chawla2014nejm, kellum2021acute}.
+
+Entre los fármacos, los IECAs mostraron la asociación más fuerte (OR = 3,14), seguidos de los AINEs (OR = 2,44) y la vancomicina (OR = 2,13). Estos hallazgos son consistentes con la literatura sobre nefrotoxicidad farmacológica \cite{perazella2019, perazella2022, zhang2017nsaids, pais2020vancomycin}. El sexo masculino también se asoció con mayor riesgo (OR = 2,01), observación consistente con algunos estudios epidemiológicos que describen mayor incidencia de AKI en hombres \cite{neugarten2018aki}.
+
+El sodio presentó un coeficiente negativo (OR = 0,59), sugiriendo que niveles más altos de sodio se asocian con menor riesgo de AKI en esta cohorte. Esta observación podría relacionarse con el hecho de que la hiponatremia a menudo refleja situaciones clínicas de gravedad (sobrecarga de volumen, síndrome hepatorrenal, estados edematosos) que podrían predisponer al daño renal.
+
+\subsection{Importancias del Random Forest}
+
+El Random Forest permite calcular la importancia de cada variable basándose en cuánto contribuye a reducir la impureza (índice Gini) en los nodos de decisión a lo largo del bosque de árboles \cite{breiman2001random}. A diferencia de los coeficientes de regresión, estas importancias no tienen una interpretación directa en términos de odds ratios, pero indican qué variables son más útiles para la discriminación.
+
+La Figura \ref{fig:imp_rf} muestra las importancias relativas de las variables en el modelo Random Forest.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/fig_12_rf_feature_importance.png}
+    \caption{Importancias relativas de las variables en el modelo Random Forest, calculadas según la reducción media de impureza (Gini). La creatinina basal concentra casi el 30\% de la importancia total, seguida de la edad y los electrolitos.}
+    \label{fig:imp_rf}
+\end{figure}
+
+Las variables más importantes según el Random Forest fueron:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lr}
+\hline
+\textbf{Variable} & \textbf{Importancia} \\
+\hline
+BaselineCreatinina & 0,2847 \\
+EdadAproxIngreso & 0,1523 \\
+Sodio\_mmol\_L & 0,1312 \\
+Potasio\_mmol\_L & 0,1156 \\
+N\_Farmacos\_Riesgo & 0,0892 \\
+Sexo & 0,0634 \\
+DIURETICO & 0,0412 \\
+AINE & 0,0387 \\
+\hline
+\end{tabular}
+\caption{Importancias de variables en el Random Forest (suma total = 1,0)}
+\label{tab:imp_rf}
+\end{table}
+
+De nuevo, la creatinina basal fue la variable más relevante, concentrando casi el 30\% de la importancia total. La edad, que tenía un peso relativamente bajo en la regresión logística, apareció como el segundo predictor más importante en el Random Forest, sugiriendo que su relación con el riesgo de AKI podría ser no lineal o interactuar con otras variables de formas que el modelo de árboles captura mejor. Esta capacidad del Random Forest para modelar relaciones no lineales e interacciones sin especificarlas explícitamente es una de sus ventajas reconocidas \cite{couronne2018random}.
+
+Las variables analíticas continuas (sodio, potasio) también mostraron importancias relevantes, mientras que las variables farmacológicas binarias individuales quedaron relegadas a posiciones inferiores. Esto podría deberse a que el Random Forest captura parte de la información farmacológica a través de la variable agregada N\_Farmacos\_Riesgo.
+
+\subsection{Convergencia entre modelos}
+
+La comparación entre ambos enfoques de interpretación revela tanto convergencias como divergencias:
+
+\textbf{Convergencias:}
+\begin{itemize}
+    \item La creatinina basal fue el predictor más importante en ambos modelos, confirmando su relevancia clínica como indicador del estado renal basal.
+    \item La variable N\_Farmacos\_Riesgo mostró utilidad en ambos modelos, sugiriendo que la carga farmacológica agregada aporta información predictiva.
+    \item El sexo apareció como predictor relevante en ambos casos.
+\end{itemize}
+
+\textbf{Divergencias:}
+\begin{itemize}
+    \item La edad tuvo mucha más importancia en el Random Forest que en la regresión logística, posiblemente porque el modelo de árboles captura efectos no lineales o umbrales.
+    \item Los fármacos individuales (IECA, AINE, vancomicina) destacaron más en la regresión logística, mientras que el Random Forest les asignó importancias menores.
+\end{itemize}
+
+Estas diferencias reflejan las distintas formas en que cada algoritmo modela las relaciones entre variables y desenlace, y subrayan la utilidad de emplear aproximaciones complementarias para obtener una visión más completa \cite{steyerberg2014clinical}.
+
+\section{Demostración sobre casos simulados}
+
+Para ilustrar el funcionamiento del modelo en términos prácticos, se aplicó el modelo de regresión logística a dos perfiles de paciente simulados que representan extremos del espectro de riesgo.
+
+\textbf{Caso 1: Paciente de bajo riesgo}
+\begin{itemize}
+    \item Mujer de 45 años
+    \item Creatinina basal: 0,7 mg/dL (función renal normal)
+    \item Sodio: 140 mmol/L, Potasio: 4,0 mmol/L (electrolitos normales)
+    \item Sin exposición a fármacos de riesgo
+\end{itemize}
+
+Probabilidad estimada de AKI: \textbf{1,3\%}
+
+\textbf{Caso 2: Paciente de alto riesgo}
+\begin{itemize}
+    \item Hombre de 78 años
+    \item Creatinina basal: 2,1 mg/dL (función renal deteriorada)
+    \item Sodio: 132 mmol/L (hiponatremia leve), Potasio: 5,2 mmol/L (hiperpotasemia leve)
+    \item Exposición a IECA, diurético y vancomicina (3 fármacos de riesgo)
+\end{itemize}
+
+Probabilidad estimada de AKI: \textbf{92,9\%}
+
+Estos ejemplos ilustran la capacidad del modelo para estratificar el riesgo de forma coherente con la intuición clínica. El primer perfil representa a un paciente joven, con función renal normal y sin factores de riesgo farmacológico, al que el modelo asigna una probabilidad muy baja. El segundo perfil acumula múltiples factores de riesgo conocidos, y el modelo responde asignando una probabilidad cercana a la certeza.
 
 \section{Discusión}
-\label{sec:discusion}
 
-Análisis crítico de los resultados obtenidos y comparación con la literatura.
+\subsection{Interpretación clínica de los resultados}
+
+Los resultados obtenidos demuestran que es técnicamente viable construir modelos de predicción de AKI utilizando datos clínicos de rutina disponibles en un hospital español. Ambos modelos entrenados capturaron señal predictiva real, con ROC-AUC claramente superiores al azar.
+
+La creatinina basal emergió como el predictor más consistente, resultado que tiene pleno sentido clínico. Los pacientes que ingresan con función renal ya comprometida tienen menos reserva funcional para tolerar agresiones adicionales (hipotensión, fármacos nefrotóxicos, contrastes) y, por tanto, mayor probabilidad de desarrollar un deterioro agudo que cumpla criterios de AKI. Este hallazgo es coherente con múltiples estudios previos que identifican la enfermedad renal crónica preexistente como uno de los principales factores de riesgo para AKI \cite{chawla2014nejm, kellum2021acute}.
+
+La relevancia de las variables farmacológicas en la regresión logística es coherente con la literatura sobre nefrotoxicidad inducida por medicamentos \cite{perazella2019, perazella2022}. Sin embargo, debe interpretarse con cautela: la asociación observada podría reflejar tanto un efecto directo del fármaco como confusión por indicación (los pacientes más graves reciben más fármacos y también tienen mayor riesgo basal de AKI).
+
+\subsection{Comparación con la literatura}
+
+Los valores de ROC-AUC obtenidos (0,75 para regresión logística, 0,90 para Random Forest) se sitúan en un rango comparable al de otros estudios publicados, aunque con matices importantes.
+
+El estudio de Tomašev et al. \cite{tomasev2019nature} reportó un ROC-AUC de 0,921 para su modelo de aprendizaje profundo, ligeramente superior al de nuestro Random Forest. Sin embargo, aquel trabajo utilizó datos de más de 700.000 pacientes, cientos de variables y arquitecturas de redes neuronales recurrentes. La comparación directa no es apropiada dadas las diferencias de escala y complejidad.
+
+Churpek et al. \cite{churpek2020jama} obtuvieron ROC-AUC de 0,74-0,76 en validación externa para su modelo gradient boosting, valores similares a los de nuestra regresión logística. Koyner et al. \cite{koyner2018ccm} reportaron AUC de 0,74 para predicción de AKI en las siguientes 24 horas. Estos valores sugieren que nuestros resultados están en línea con lo que puede esperarse de modelos desarrollados con conjuntos de variables relativamente simples.
+
+Las revisiones sistemáticas recientes \cite{rank2022systematic, shi2025jamia, zhao2024systematic} han descrito un rango amplio de rendimientos en la literatura, con ROC-AUC que oscilan entre 0,65 y 0,95 dependiendo del modelo, la población y las variables utilizadas. Nuestros resultados se sitúan dentro de este rango, lo que sugiere que el enfoque adoptado es razonable para una prueba de concepto.
+
+Un hallazgo metodológicamente relevante es la discrepancia entre ROC-AUC y métricas de clasificación en el Random Forest. Este patrón, donde un modelo tiene buena capacidad discriminativa pero genera pocas o ninguna predicción positiva con el umbral estándar, no es infrecuente en problemas muy desbalanceados, pero rara vez se discute explícitamente en los artículos publicados. Nuestro análisis de umbral ilustra la importancia de no confiar ciegamente en una única métrica ni en configuraciones por defecto.
+
+\subsection{Limitaciones del estudio}
+
+Este trabajo presenta varias limitaciones que deben tenerse en cuenta al interpretar los resultados:
+
+\textbf{Tamaño muestral limitado}: Con solo 1.175 ingresos y 29 eventos positivos, las estimaciones de rendimiento están sujetas a considerable variabilidad. El conjunto de prueba contenía únicamente 6 casos positivos, lo que hace que las métricas puedan variar sustancialmente con pequeños cambios en la clasificación. Riley et al. \cite{riley2020minimum} han propuesto métodos para calcular el tamaño muestral mínimo en estudios de predicción, y según sus criterios nuestra cohorte estaría en el límite inferior de lo aceptable.
+
+\textbf{Ausencia de validación externa}: Los modelos se evaluaron sobre una partición del mismo dataset utilizado para el entrenamiento. No se dispuso de datos de otros hospitales ni de otros periodos temporales para comprobar si los resultados se mantienen en poblaciones diferentes. Las guías TRIPOD \cite{collins2015tripod} enfatizan la importancia de la validación externa antes de considerar cualquier aplicación clínica.
+
+\textbf{Conjunto limitado de variables}: El modelo utilizó 13 predictores disponibles de forma rutinaria, pero existen muchas otras variables potencialmente relevantes que no fueron incluidas: diagnósticos al ingreso, comorbilidades codificadas, procedimientos realizados, constantes vitales, evolución temporal de las analíticas. Estudios como el de Tomašev et al. \cite{tomasev2019nature} utilizaron cientos de variables, incluyendo secuencias temporales.
+
+\textbf{Definición simplificada de AKI}: Se utilizó únicamente el criterio de incremento de creatinina, sin considerar el criterio de diuresis ni la clasificación en estadios de gravedad según KDIGO \cite{kdigo2012aki}.
+
+\textbf{Posible sesgo de selección}: La cohorte final representa una fracción pequeña del total de ingresos de la base de datos, incluyendo solo aquellos con analítica enlazable. Los pacientes excluidos podrían diferir sistemáticamente de los incluidos.
+
+\textbf{No se realizó ajuste de hiperparámetros}: Los modelos se entrenaron con configuraciones básicas, sin validación cruzada ni búsqueda exhaustiva de parámetros óptimos. Esto fue una decisión deliberada para evitar sobreajuste dado el bajo número de eventos, pero podría haber limitado el rendimiento alcanzable.
+
+\textbf{Calibración no evaluada}: No se analizó formalmente si las probabilidades predichas reflejan adecuadamente las frecuencias reales de eventos. La calibración es un aspecto importante de los modelos predictivos que complementa a la discriminación \cite{steyerberg2014clinical}.
+
+\subsection{Consideraciones sobre implementación clínica}
+
+Aunque los resultados son prometedores como prueba de concepto, el modelo no está listo para su uso clínico por varias razones:
+
+\begin{enumerate}
+    \item \textbf{Validación insuficiente}: Antes de cualquier implementación sería imprescindible validar el modelo en cohortes independientes, siguiendo las recomendaciones TRIPOD \cite{collins2015tripod}.
+    \item \textbf{Calibración no evaluada}: No se ha estudiado si las probabilidades predichas están bien calibradas.
+    \item \textbf{Impacto clínico desconocido}: No se ha estudiado si las alertas generadas por el modelo modificarían el comportamiento de los clínicos ni si esto se traduciría en mejores resultados para los pacientes.
+    \item \textbf{Integración técnica}: La implementación en un sistema de información hospitalario requeriría desarrollos técnicos adicionales fuera del alcance de este trabajo.
+    \item \textbf{Consideraciones éticas}: El uso de sistemas de IA en decisiones clínicas plantea cuestiones éticas sobre responsabilidad, transparencia y equidad que deberían abordarse antes de cualquier implementación \cite{char2018implementing}.
+\end{enumerate}
+
+A pesar de estas limitaciones, el trabajo demuestra la viabilidad del enfoque y sienta las bases para desarrollos futuros más ambiciosos.
 
 %% --- CAPÍTULO 8: CONCLUSIONES ---
 \chapter{Conclusiones}
 \label{chap:conclusiones}
 
-\textit{Verificar si se han alcanzado los objetivos planteados al principio de esta memoria. En caso positivo, comentar las evidencias más relevantes y en caso negativo, indicar los motivos por los que se cree que ha fallado el objetivo en cuestión.}
+Este capítulo sintetiza los principales hallazgos del trabajo, valora el grado de cumplimiento de los objetivos planteados y ofrece una reflexión final sobre las aportaciones y limitaciones del proyecto.
 
-\section{Conclusiones generales}
-\label{sec:conclusiones_generales}
+\section{Síntesis del trabajo realizado}
 
-\textit{Conclusiones principales del trabajo.}
+Este Trabajo de Fin de Grado se propuso desarrollar y evaluar un modelo de aprendizaje automático para la predicción temprana de lesión renal aguda en pacientes hospitalizados, utilizando datos clínicos reales procedentes de HM Hospitales. El proyecto abarcó todas las fases de un flujo de trabajo de ciencia de datos aplicada: desde la extracción y preparación de los datos hasta el entrenamiento, evaluación e interpretación de modelos predictivos.
 
-\section{Limitaciones del estudio}
-\label{sec:limitaciones}
+El trabajo partió de la base de datos clínica Doctoris, de la que se extrajo una cohorte de 1.175 ingresos hospitalarios con información demográfica, analítica y farmacológica. Se definió como variable objetivo el desarrollo de AKI en las 48 horas posteriores al valor basal de creatinina, siguiendo una adaptación del criterio KDIGO de incremento absoluto. La cohorte resultante presentó un marcado desbalanceo de clases, con solo 29 casos positivos (2,5\%), lo que condicionó tanto la estrategia de modelado como la selección de métricas de evaluación.
 
-\textit{Limitaciones identificadas en el desarrollo del trabajo.}
+Se entrenaron dos modelos de clasificación: regresión logística y Random Forest, ambos configurados con ponderación de clases para contrarrestar el desbalanceo. La evaluación se realizó sobre un conjunto de prueba independiente (20\% de los datos), utilizando métricas apropiadas para problemas con evento infrecuente: ROC-AUC, precisión, recall y F1-score.
+
+\section{Principales hallazgos}
+
+Los resultados obtenidos permiten extraer varias conclusiones relevantes:
+
+\textbf{1. Es viable construir modelos predictivos de AKI con datos hospitalarios españoles.} Ambos modelos entrenados capturaron señal predictiva real, con valores de ROC-AUC claramente superiores al azar. El Random Forest alcanzó un AUC de 0,895, indicando una capacidad de discriminación excelente según los criterios establecidos en la literatura \cite{hosmer2013applied}. La regresión logística obtuvo un AUC de 0,747, representando una discriminación aceptable.
+
+\textbf{2. La creatinina basal es el predictor más consistente.} En ambos modelos, la creatinina sérica al ingreso emergió como la variable con mayor capacidad predictiva. Este hallazgo tiene pleno sentido clínico: los pacientes con función renal ya deteriorada disponen de menor reserva funcional para tolerar agresiones adicionales. La consistencia de este resultado entre dos algoritmos metodológicamente diferentes refuerza su robustez.
+
+\textbf{3. Las variables farmacológicas aportan información predictiva.} La exposición a fármacos potencialmente nefrotóxicos (IECAs, AINEs, vancomicina) mostró asociación con el riesgo de AKI en la regresión logística, con odds ratios entre 2 y 3. La variable agregada N\_Farmacos\_Riesgo también resultó relevante en ambos modelos, sugiriendo un posible efecto acumulativo de la carga farmacológica.
+
+\textbf{4. El umbral de decisión tiene un impacto crítico en la utilidad práctica.} El análisis del Random Forest reveló que un modelo con excelente capacidad de discriminación puede resultar inútil como clasificador binario si el umbral no se ajusta adecuadamente. Con el umbral estándar de 0,5, el Random Forest no identificó ningún caso positivo; al reducirlo a 0,2, alcanzó un F1-score de 0,31, casi tres veces superior al de la regresión logística.
+
+\textbf{5. Existe un trade-off entre sensibilidad y especificidad.} La regresión logística detectó el 67\% de los casos positivos, pero a costa de generar un elevado número de falsos positivos (62 de 235 observaciones). En un contexto clínico, esto implicaría alertas frecuentes sobre pacientes que no desarrollarán AKI, lo que podría generar fatiga de alertas y reducir la confianza en el sistema.
+
+\section{Cumplimiento de los objetivos}
+
+A continuación se valora el grado de cumplimiento de cada uno de los objetivos específicos planteados al inicio del trabajo:
+
+\textbf{Objetivo 1: Identificar las variables clínicas, analíticas y farmacológicas disponibles en la base de datos hospitalaria que puedan estar asociadas al desarrollo de AKI.}
+
+\textit{Cumplido.} Se identificaron y extrajeron variables de tres categorías: demográficas (edad, sexo), analíticas (creatinina, sodio, potasio) y farmacológicas (exposición a seis grupos de fármacos de riesgo). El análisis confirmó la asociación de varias de estas variables con el desenlace.
+
+\textbf{Objetivo 2: Construir un dataset estructurado mediante un proceso de extracción, limpieza y transformación de los datos clínicos.}
+
+\textit{Cumplido.} Se desarrolló un pipeline completo de ingeniería del dato que incluyó: extracción mediante SQL desde la base de datos Doctoris, validación estructural, corrección de formatos, tratamiento de valores ausentes, eliminación de variables redundantes y creación de variables derivadas. El resultado fue un dataset de 1.175 observaciones y 13 predictores.
+
+\textbf{Objetivo 3: Realizar un análisis exploratorio para caracterizar la cohorte y detectar patrones relacionados con el desarrollo de AKI.}
+
+\textit{Cumplido.} Se realizó un análisis exploratorio exhaustivo que incluyó: estadísticos descriptivos de todas las variables, análisis de completitud, estudio de correlaciones, distribución de la variable objetivo y análisis bivariante preliminar. Este análisis permitió identificar la redundancia entre variables de creatinina y caracterizar el marcado desbalanceo de clases.
+
+\textbf{Objetivo 4: Entrenar y comparar modelos de regresión logística y Random Forest para la predicción de AKI, evaluando su rendimiento mediante métricas apropiadas para problemas desbalanceados.}
+
+\textit{Cumplido.} Se entrenaron ambos modelos con configuraciones apropiadas para el problema (ponderación de clases). La evaluación se basó en métricas relevantes para problemas desbalanceados (ROC-AUC, recall, F1-score) y se complementó con análisis de umbral y curvas ROC comparativas.
+
+\textbf{Objetivo 5: Analizar la importancia de las variables predictoras e interpretar los resultados desde una perspectiva clínica.}
+
+\textit{Cumplido.} Se analizaron los coeficientes de la regresión logística y las importancias del Random Forest, identificando convergencias y divergencias entre ambos enfoques. Los resultados se interpretaron a la luz de la literatura clínica sobre factores de riesgo de AKI y nefrotoxicidad farmacológica.
+
+\section{Aportaciones del trabajo}
+
+Este TFG realiza varias aportaciones que, aunque modestas en el contexto de la investigación internacional, tienen valor en el ámbito académico y local:
+
+\begin{itemize}
+    \item \textbf{Demostración de viabilidad}: Se demuestra que es técnicamente posible construir modelos de predicción de AKI utilizando datos de hospitales españoles, contribuyendo a un área de la literatura dominada por estudios anglosajones.
+    
+    \item \textbf{Pipeline reproducible}: Se ha desarrollado un flujo de trabajo estructurado y documentado que puede servir como base para proyectos futuros más ambiciosos.
+    
+    \item \textbf{Análisis metodológico}: El trabajo ilustra de forma práctica la importancia de considerar múltiples métricas y de ajustar el umbral de decisión en problemas desbalanceados, aspectos que no siempre se abordan explícitamente en la literatura.
+    
+    \item \textbf{Interpretabilidad}: La priorización de modelos interpretables y el análisis detallado de la contribución de cada variable ofrecen resultados que pueden comunicarse a profesionales clínicos.
+\end{itemize}
+
+\section{Limitaciones y alcance}
+
+Es fundamental reiterar que este trabajo constituye una prueba de concepto académica, no una herramienta lista para uso clínico. Las principales limitaciones —tamaño muestral reducido, ausencia de validación externa, conjunto limitado de variables— impiden generalizar los resultados más allá de la cohorte estudiada.
+
+El modelo desarrollado no debe utilizarse para tomar decisiones clínicas reales sin una validación rigurosa adicional que incluya, como mínimo: validación en cohortes independientes de otros centros y periodos temporales, evaluación formal de la calibración, análisis del impacto clínico y consideración de aspectos éticos y regulatorios.
+
+\section{Reflexión final}
+
+La predicción de eventos clínicos adversos mediante técnicas de aprendizaje automático representa una de las aplicaciones más prometedoras de la inteligencia artificial en el ámbito sanitario. Sin embargo, el camino desde una prueba de concepto hasta una herramienta clínica validada y útil es largo y está plagado de obstáculos metodológicos, técnicos y organizativos.
+
+Este trabajo ha permitido recorrer las primeras etapas de ese camino: demostrar que existe señal predictiva en los datos disponibles, identificar qué variables parecen más relevantes y establecer una línea base de rendimiento. Los resultados son lo suficientemente prometedores como para justificar esfuerzos futuros más ambiciosos, pero lo suficientemente modestos como para mantener una perspectiva realista sobre las limitaciones actuales.
+
+En última instancia, el valor de este tipo de modelos no reside en sustituir el juicio clínico, sino en complementarlo: ofrecer al profesional sanitario una señal adicional que le ayude a priorizar su atención hacia los pacientes con mayor riesgo, permitiéndole actuar de forma preventiva cuando todavía es posible marcar una diferencia.
 
 %% --- CAPÍTULO 9: TRABAJOS FUTUROS ---
 \chapter{Trabajos Futuros}
 \label{chap:trabajos_futuros}
 
-\textit{Describir cómo se le daría continuidad a este trabajo en el futuro, posibles nuevas líneas de investigación, o si el trabajo y metodología podrían extrapolarse a otros sectores o proyectos relacionados.}
+Este capítulo identifica las principales líneas de trabajo que podrían dar continuidad al presente proyecto, abordando las limitaciones detectadas y explorando extensiones que incrementarían tanto el rigor metodológico como la utilidad práctica del sistema de predicción.
+
+\section{Ampliación de la cohorte}
+
+La limitación más evidente del trabajo actual es el reducido número de eventos positivos. Con solo 29 casos de AKI en toda la cohorte, las estimaciones de rendimiento están sujetas a considerable incertidumbre y el modelo tiene pocas oportunidades de aprender patrones complejos asociados al desenlace.
+
+Existen varias estrategias para abordar esta limitación:
+
+\begin{itemize}
+    \item \textbf{Ampliación del periodo temporal}: Extender la ventana de extracción para incluir ingresos de años anteriores incrementaría el volumen de datos disponibles. Sería necesario verificar que no existan cambios sustanciales en los patrones de codificación o en las prácticas clínicas que pudieran introducir heterogeneidad.
+    
+    \item \textbf{Inclusión de múltiples centros}: El grupo HM Hospitales dispone de varios centros hospitalarios. Incorporar datos de otros hospitales del grupo no solo aumentaría el tamaño muestral, sino que también permitiría evaluar la consistencia del modelo entre diferentes entornos asistenciales.
+    
+    \item \textbf{Colaboración multicéntrica}: A más largo plazo, la colaboración con otros grupos hospitalarios españoles permitiría construir cohortes de tamaño comparable a las utilizadas en estudios internacionales de referencia \cite{tomasev2019nature, churpek2020jama}.
+\end{itemize}
+
+\section{Incorporación de nuevas variables}
+
+El modelo actual utiliza un conjunto relativamente limitado de predictores. La literatura sugiere que existen muchas otras variables potencialmente relevantes que podrían mejorar el rendimiento:
+
+\begin{itemize}
+    \item \textbf{Comorbilidades}: Diagnósticos codificados como diabetes mellitus, insuficiencia cardíaca, enfermedad hepática crónica o neoplasias activas son factores de riesgo establecidos para AKI \cite{kellum2021acute} y podrían extraerse de los sistemas de codificación hospitalarios.
+    
+    \item \textbf{Diagnóstico principal al ingreso}: El motivo de hospitalización condiciona fuertemente el riesgo de complicaciones. Pacientes ingresados por sepsis, cirugía mayor o descompensación cardíaca tienen perfiles de riesgo muy diferentes.
+    
+    \item \textbf{Constantes vitales}: Parámetros como la presión arterial, frecuencia cardíaca o temperatura al ingreso podrían aportar información sobre el estado hemodinámico del paciente.
+    
+    \item \textbf{Variables temporales}: En lugar de utilizar únicamente el valor basal de los biomarcadores, podría modelarse su evolución temporal durante las primeras horas del ingreso. Los modelos con datos secuenciales, como las redes neuronales recurrentes utilizadas por Tomašev et al. \cite{tomasev2019nature}, han mostrado resultados prometedores en este sentido.
+    
+    \item \textbf{Procedimientos realizados}: La exposición a contrastes yodados, intervenciones quirúrgicas o cateterismos podría constituir un factor de riesgo adicional.
+\end{itemize}
+
+\section{Validación externa}
+
+Antes de considerar cualquier aplicación práctica, sería imprescindible validar el modelo en cohortes independientes. Las guías TRIPOD \cite{collins2015tripod} distinguen varios niveles de validación:
+
+\begin{itemize}
+    \item \textbf{Validación temporal}: Evaluar el modelo en ingresos de un periodo posterior al utilizado para el entrenamiento, dentro del mismo hospital.
+    
+    \item \textbf{Validación geográfica}: Evaluar el modelo en datos de otros hospitales del grupo HM o de otros sistemas sanitarios.
+    
+    \item \textbf{Validación en diferentes poblaciones}: Comprobar si el rendimiento se mantiene en subgrupos específicos (pacientes de UCI, pacientes quirúrgicos, pacientes oncológicos).
+\end{itemize}
+
+Solo tras demostrar que el modelo generaliza adecuadamente a nuevos datos tendría sentido plantearse su implementación en un entorno real.
+
+\section{Optimización del modelado}
+
+El presente trabajo utilizó configuraciones relativamente básicas de los modelos, sin realizar una búsqueda exhaustiva de hiperparámetros. Futuras iteraciones podrían explorar:
+
+\begin{itemize}
+    \item \textbf{Validación cruzada}: Implementar esquemas de validación cruzada estratificada para obtener estimaciones más robustas del rendimiento y seleccionar hiperparámetros de forma menos sesgada.
+    
+    \item \textbf{Técnicas de rebalanceo}: Explorar métodos como SMOTE (\textit{Synthetic Minority Over-sampling Technique}) \cite{chawla2002smote}, submuestreo aleatorio o generación de datos sintéticos para mitigar el efecto del desbalanceo de clases.
+    
+    \item \textbf{Otros algoritmos}: Evaluar modelos como XGBoost, LightGBM o redes neuronales, que podrían capturar patrones más complejos si se dispusiera de más datos.
+    
+    \item \textbf{Selección de variables}: Aplicar técnicas formales de selección de características (eliminación recursiva, regularización L1, importancias permutadas) para identificar el subconjunto óptimo de predictores.
+\end{itemize}
+
+\section{Calibración de probabilidades}
+
+Los modelos actuales generan probabilidades que no han sido evaluadas en términos de calibración. Una probabilidad predicha del 30\% debería corresponder, idealmente, a una frecuencia observada del evento cercana al 30\% en pacientes con esa predicción.
+
+Trabajos futuros deberían:
+
+\begin{itemize}
+    \item Evaluar la calibración mediante curvas de calibración y estadísticos como el test de Hosmer-Lemeshow o el \textit{Brier score}.
+    
+    \item Aplicar técnicas de recalibración si fuera necesario, como \textit{Platt scaling} o calibración isotónica \cite{niculescu2005predicting}.
+    
+    \item Considerar la calibración como un criterio adicional en la selección de modelos, junto con la discriminación.
+\end{itemize}
+
+\section{Evaluación del impacto clínico}
+
+Más allá del rendimiento estadístico, la utilidad real de un sistema de alertas depende de su impacto en la práctica clínica. Esto requeriría estudios específicos que evalúen:
+
+\begin{itemize}
+    \item \textbf{Aceptabilidad}: ¿Los profesionales sanitarios confían en las alertas generadas? ¿Las consideran útiles?
+    
+    \item \textbf{Cambio de comportamiento}: ¿Las alertas modifican las decisiones clínicas? ¿Se intensifica la monitorización o se ajusta la medicación en los pacientes identificados como de alto riesgo?
+    
+    \item \textbf{Resultados en salud}: ¿La implementación del sistema reduce la incidencia de AKI, la necesidad de diálisis o la mortalidad? Este tipo de evaluación requeriría estudios prospectivos controlados.
+    
+    \item \textbf{Efectos adversos}: ¿La generación de falsas alarmas produce fatiga de alertas o desconfianza en el sistema?
+\end{itemize}
+
+Vickers y Elkin \cite{vickers2006decision} proponen el análisis de curvas de decisión como herramienta para evaluar la utilidad clínica neta de un modelo predictivo, considerando explícitamente las preferencias sobre los diferentes tipos de error.
+
+\section{Integración en sistemas de información}
+
+Si los desarrollos anteriores demostraran la validez y utilidad del modelo, el paso final sería su integración en el flujo de trabajo clínico real. Esto implicaría:
+
+\begin{itemize}
+    \item \textbf{Desarrollo técnico}: Crear interfaces que conecten el modelo con los sistemas de historia clínica electrónica, permitiendo la ejecución automática de predicciones cuando se registran nuevos datos.
+    
+    \item \textbf{Diseño de alertas}: Definir cómo y cuándo se presentan las alertas al personal clínico, evitando tanto la sobrecarga de información como la omisión de casos importantes.
+    
+    \item \textbf{Monitorización continua}: Implementar sistemas de vigilancia que detecten degradaciones del rendimiento del modelo a lo largo del tiempo (\textit{model drift}).
+    
+    \item \textbf{Consideraciones éticas y regulatorias}: Abordar cuestiones de responsabilidad, privacidad, consentimiento y cumplimiento normativo \cite{char2018implementing}.
+\end{itemize}
+
+\section{Extensión a otros desenlaces}
+
+Finalmente, la metodología desarrollada podría adaptarse para predecir otros eventos adversos hospitalarios de interés:
+
+\begin{itemize}
+    \item Mortalidad intrahospitalaria
+    \item Ingreso en UCI no planificado
+    \item Reingresos a 30 días
+    \item Infecciones nosocomiales
+    \item Eventos tromboembólicos
+\end{itemize}
+
+La infraestructura de datos y el pipeline analítico construidos en este trabajo podrían reutilizarse como base para estos desarrollos, adaptando la definición de la variable objetivo y el conjunto de predictores según el problema específico.
+
+\section{Resumen de prioridades}
+
+A modo de síntesis, las líneas de trabajo futuro pueden ordenarse según su prioridad:
+
+\begin{enumerate}
+    \item \textbf{Prioridad alta}: Ampliación de la cohorte y validación externa. Sin estos elementos, cualquier otra mejora tiene un alcance limitado.
+    
+    \item \textbf{Prioridad media}: Incorporación de nuevas variables, optimización del modelado y evaluación de la calibración.
+    
+    \item \textbf{Prioridad a largo plazo}: Evaluación del impacto clínico, integración en sistemas de información y extensión a otros desenlaces.
+\end{enumerate}
+
+El camino desde una prueba de concepto hasta una herramienta clínica validada es largo, pero los resultados obtenidos en este trabajo sugieren que merece la pena recorrerlo.
 
 %% ==================== BIBLIOGRAFÍA ==================== %%
 \newpage
@@ -1378,14 +1912,356 @@ Análisis crítico de los resultados obtenidos y comparación con la literatura.
 
 %% ==================== ANEXOS ==================== %%
 \appendix
-\chapter{Anexo A: Código fuente}
-\label{chap:anexo_codigo}
+\chapter{Diccionario de variables}
+\label{anexo:diccionario}
 
-\textit{Incluir aquí código fuente relevante o referencias al repositorio.}
+Este anexo presenta la descripción completa de las variables utilizadas en el modelo predictivo.
 
-\chapter{Anexo B: Tablas complementarias}
-\label{chap:anexo_tablas}
+\section{Variables del dataset original}
 
-\textit{Incluir aquí tablas adicionales que no se han incluido en el cuerpo principal.}
+La siguiente tabla describe las 24 variables extraídas originalmente de la base de datos Doctoris:
+
+\begin{longtable}{p{4cm}p{2.5cm}p{7cm}}
+\hline
+\textbf{Variable} & \textbf{Tipo} & \textbf{Descripción} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Variable} & \textbf{Tipo} & \textbf{Descripción} \\
+\hline
+\endhead
+\hline
+\endfoot
+IdIngreso & Entero & Identificador único del ingreso hospitalario \\
+UUIdPaciente & UUID & Identificador único anonimizado del paciente \\
+Sexo & Binario & Sexo del paciente (0 = Hombre, 1 = Mujer) \\
+EdadAproxIngreso & Entero & Edad aproximada del paciente al momento del ingreso (años) \\
+FechaIngreso & Fecha & Fecha de ingreso hospitalario \\
+FechaAlta & Fecha & Fecha de alta hospitalaria \\
+IdHospital & Entero & Identificador del hospital dentro del grupo HM \\
+IdSociedad & Entero & Identificador de la sociedad médica \\
+IdDoctor & Entero & Identificador del médico responsable \\
+PrimeraFechaLab & Fecha & Fecha del primer laboratorio durante el ingreso \\
+Creatinina\_mg\_dL & Decimal & Valor de creatinina sérica del primer laboratorio (mg/dL) \\
+Urea\_mg\_dL & Decimal & Valor de urea sérica del primer laboratorio (mg/dL) \\
+Potasio\_mmol\_L & Decimal & Valor de potasio sérico (mmol/L) \\
+Sodio\_mmol\_L & Decimal & Valor de sodio sérico (mmol/L) \\
+BaselineFecha & Fecha & Fecha del laboratorio utilizado como baseline \\
+BaselineCreatinina & Decimal & Valor de creatinina sérica baseline (mg/dL) \\
+MaxCreatinina48h & Decimal & Valor máximo de creatinina en las 48h posteriores al baseline (mg/dL) \\
+AKI\_48h & Binario & Variable objetivo: 1 si se cumple criterio de AKI, 0 en caso contrario \\
+AINE & Binario & Exposición a antiinflamatorios no esteroideos durante el ingreso \\
+IECA & Binario & Exposición a inhibidores de la enzima convertidora de angiotensina \\
+ARAII & Binario & Exposición a antagonistas de los receptores de angiotensina II \\
+DIURETICO & Binario & Exposición a diuréticos durante el ingreso \\
+VANCOMICINA & Binario & Exposición a vancomicina durante el ingreso \\
+AMINOGLUCOSIDO & Binario & Exposición a aminoglucósidos durante el ingreso \\
+\hline
+\caption{Diccionario de variables del dataset original}
+\label{tab:diccionario_original}
+\end{longtable}
+
+\section{Variables derivadas}
+
+Durante la fase de ingeniería de características se crearon las siguientes variables adicionales:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{p{4cm}p{2.5cm}p{7cm}}
+\hline
+\textbf{Variable} & \textbf{Tipo} & \textbf{Descripción} \\
+\hline
+Edad\_ge\_65 & Binario & Indicador de edad avanzada (1 si EdadAproxIngreso $\geq$ 65, 0 en caso contrario) \\
+N\_Farmacos\_Riesgo & Entero (0-6) & Número total de grupos farmacológicos de riesgo a los que está expuesto el paciente (suma de AINE, IECA, ARAII, DIURETICO, VANCOMICINA, AMINOGLUCOSIDO) \\
+\hline
+\end{tabular}
+\caption{Variables derivadas creadas durante el análisis}
+\label{tab:variables_derivadas}
+\end{table}
+
+\section{Variables incluidas en el modelo final}
+
+El conjunto final de predictores utilizado para el entrenamiento de los modelos incluyó 13 variables:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{llp{8cm}}
+\hline
+\textbf{Variable} & \textbf{Categoría} & \textbf{Justificación de inclusión} \\
+\hline
+Sexo & Demográfica & Factor epidemiológico asociado a diferencias en incidencia de AKI \\
+EdadAproxIngreso & Demográfica & La edad avanzada es factor de riesgo establecido \\
+Edad\_ge\_65 & Demográfica & Captura posible efecto umbral de la edad \\
+BaselineCreatinina & Analítica & Indicador del estado basal de función renal \\
+Potasio\_mmol\_L & Analítica & Marcador de función renal y estado metabólico \\
+Sodio\_mmol\_L & Analítica & Marcador de estado de hidratación y gravedad clínica \\
+AINE & Farmacológica & Nefrotoxicidad documentada \\
+IECA & Farmacológica & Afecta hemodinámica renal \\
+ARAII & Farmacológica & Afecta hemodinámica renal \\
+DIURETICO & Farmacológica & Puede comprometer perfusión renal \\
+VANCOMICINA & Farmacológica & Nefrotoxicidad dosis-dependiente documentada \\
+AMINOGLUCOSIDO & Farmacológica & Nefrotoxicidad documentada \\
+N\_Farmacos\_Riesgo & Derivada & Captura efecto acumulativo de exposición farmacológica \\
+\hline
+\end{tabular}
+\caption{Variables predictoras incluidas en el modelo final}
+\label{tab:variables_modelo}
+\end{table}
+
+
+\chapter{Estructura de la base de datos y extracción}
+\label{anexo:sql}
+
+Este anexo describe la estructura conceptual de la consulta SQL utilizada para extraer los datos del sistema Doctoris.
+
+\section{Tablas involucradas}
+
+La extracción de datos requirió la integración de información procedente de múltiples tablas del sistema Doctoris:
+
+\begin{itemize}
+    \item \textbf{Tabla de ingresos}: Contenía los datos demográficos y administrativos de cada episodio hospitalario (identificadores, fechas de ingreso y alta, hospital, médico responsable).
+    
+    \item \textbf{Tabla de laboratorios}: Almacenaba los resultados de las determinaciones analíticas, incluyendo fecha, tipo de prueba y valor numérico.
+    
+    \item \textbf{Tabla de prescripciones/administraciones}: Registraba la medicación prescrita o administrada durante cada ingreso, permitiendo identificar la exposición a fármacos de interés.
+\end{itemize}
+
+\section{Lógica de la extracción}
+
+La consulta SQL implementó la siguiente lógica:
+
+\begin{enumerate}
+    \item \textbf{Selección de ingresos}: Se identificaron los ingresos hospitalarios en el periodo de estudio que cumplían los criterios de inclusión básicos.
+    
+    \item \textbf{Enlace con laboratorios}: Para cada ingreso, se buscaron las determinaciones de creatinina, urea, sodio y potasio, identificando:
+    \begin{itemize}
+        \item El primer laboratorio disponible tras el ingreso
+        \item El valor baseline de creatinina
+        \item El valor máximo de creatinina en las 48 horas posteriores al baseline
+    \end{itemize}
+    
+    \item \textbf{Identificación de exposiciones farmacológicas}: Se cruzó cada ingreso con la tabla de prescripciones para determinar si el paciente había recibido alguno de los seis grupos de fármacos de interés (AINEs, IECAs, ARA-II, diuréticos, vancomicina, aminoglucósidos).
+    
+    \item \textbf{Cálculo de la variable objetivo}: Se computó la variable AKI\_48h aplicando el criterio de incremento absoluto de creatinina $\geq$ 0,3 mg/dL respecto al valor baseline.
+\end{enumerate}
+
+\section{Consideraciones técnicas}
+
+\begin{itemize}
+    \item El archivo resultante se exportó en formato CSV con separador punto y coma (;) debido a la configuración regional del servidor SQL Server.
+    
+    \item Los valores decimales se exportaron con coma como separador decimal, lo que requirió un paso de transformación posterior en Python.
+    
+    \item El archivo no incluyó fila de cabecera, por lo que los nombres de columnas se asignaron manualmente durante la importación según el orden del SELECT.
+    
+    \item Por razones de confidencialidad, no se incluye el código SQL completo en esta memoria. El código está disponible en el repositorio del proyecto para revisión por parte del tribunal.
+\end{itemize}
+
+
+\chapter{Fragmentos de código Python}
+\label{anexo:codigo}
+
+Este anexo presenta los fragmentos de código más relevantes del pipeline de análisis.
+
+\section{Carga y preparación de datos}
+
+\begin{lstlisting}[language=Python, caption=Carga del dataset y asignación de nombres de columnas]
+import pandas as pd
+
+# Definición de nombres de columnas según el orden del SELECT
+column_names = [
+    'IdIngreso', 'UUIdPaciente', 'Sexo', 'EdadAproxIngreso',
+    'FechaIngreso', 'FechaAlta', 'IdHospital', 'IdSociedad',
+    'IdDoctor', 'PrimeraFechaLab', 'Creatinina_mg_dL', 'Urea_mg_dL',
+    'Potasio_mmol_L', 'Sodio_mmol_L', 'BaselineFecha',
+    'BaselineCreatinina', 'MaxCreatinina48h', 'AKI_48h',
+    'AINE', 'IECA', 'ARAII', 'DIURETICO', 'VANCOMICINA', 'AMINOGLUCOSIDO'
+]
+
+# Carga del CSV con separador europeo y sin cabecera
+df = pd.read_csv(
+    'data/raw/aki_dataset.csv',
+    sep=';',
+    header=None,
+    names=column_names,
+    dtype=str  # Cargar todo como texto inicialmente
+)
+
+print(f"Dataset cargado: {df.shape[0]} filas, {df.shape[1]} columnas")
+\end{lstlisting}
+
+\section{Corrección de formato decimal}
+
+\begin{lstlisting}[language=Python, caption=Conversión de formato decimal europeo a formato Python]
+# Variables numéricas que requieren conversión
+numeric_cols = ['Creatinina_mg_dL', 'Urea_mg_dL', 'Potasio_mmol_L',
+                'Sodio_mmol_L', 'BaselineCreatinina', 'MaxCreatinina48h']
+
+for col in numeric_cols:
+    # Reemplazar coma por punto y convertir a float
+    df[col] = df[col].str.replace(',', '.').astype(float)
+\end{lstlisting}
+
+\section{Creación de variables derivadas}
+
+\begin{lstlisting}[language=Python, caption=Creación de variables de ingeniería de características]
+# Variable binaria de edad avanzada
+df['Edad_ge_65'] = (df['EdadAproxIngreso'] >= 65).astype(int)
+
+# Conteo de fármacos de riesgo
+farmacos_riesgo = ['AINE', 'IECA', 'ARAII', 'DIURETICO',
+                   'VANCOMICINA', 'AMINOGLUCOSIDO']
+df['N_Farmacos_Riesgo'] = df[farmacos_riesgo].sum(axis=1)
+
+print(f"Distribución de N_Farmacos_Riesgo:")
+print(df['N_Farmacos_Riesgo'].value_counts().sort_index())
+\end{lstlisting}
+
+\section{Partición de datos y pipeline de modelado}
+
+\begin{lstlisting}[language=Python, caption=Configuración del pipeline de entrenamiento]
+from sklearn.model_selection import train_test_split
+from sklearn.impute import SimpleImputer
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+
+# Definición de predictores y objetivo
+predictors = ['Sexo', 'EdadAproxIngreso', 'Edad_ge_65',
+              'BaselineCreatinina', 'Potasio_mmol_L', 'Sodio_mmol_L',
+              'AINE', 'IECA', 'ARAII', 'DIURETICO',
+              'VANCOMICINA', 'AMINOGLUCOSIDO', 'N_Farmacos_Riesgo']
+target = 'AKI_48h'
+
+X = df[predictors]
+y = df[target]
+
+# Partición estratificada 80/20
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=42,
+    stratify=y
+)
+
+print(f"Entrenamiento: {X_train.shape[0]} obs ({y_train.sum()} positivos)")
+print(f"Prueba: {X_test.shape[0]} obs ({y_test.sum()} positivos)")
+\end{lstlisting}
+
+\section{Entrenamiento de modelos}
+
+\begin{lstlisting}[language=Python, caption=Configuración y entrenamiento de los modelos]
+# Pipeline de regresión logística
+pipe_lr = Pipeline([
+    ('imputer', SimpleImputer(strategy='median')),
+    ('classifier', LogisticRegression(
+        max_iter=1000,
+        class_weight='balanced',
+        random_state=42
+    ))
+])
+
+# Pipeline de Random Forest
+pipe_rf = Pipeline([
+    ('imputer', SimpleImputer(strategy='median')),
+    ('classifier', RandomForestClassifier(
+        n_estimators=200,
+        class_weight='balanced',
+        random_state=42
+    ))
+])
+
+# Entrenamiento
+pipe_lr.fit(X_train, y_train)
+pipe_rf.fit(X_train, y_train)
+
+print("Modelos entrenados correctamente")
+\end{lstlisting}
+
+\section{Evaluación de modelos}
+
+\begin{lstlisting}[language=Python, caption=Cálculo de métricas de evaluación]
+from sklearn.metrics import (roc_auc_score, precision_score,
+                             recall_score, f1_score, confusion_matrix)
+
+def evaluate_model(model, X_test, y_test, model_name):
+    #Evalua un modelo y muestra sus métricas
+    y_pred = model.predict(X_test)
+    y_prob = model.predict_proba(X_test)[:, 1]
+    
+    print(f"\n=== {model_name} ===")
+    print(f"ROC-AUC:   {roc_auc_score(y_test, y_prob):.4f}")
+    print(f"Precision: {precision_score(y_test, y_pred):.4f}")
+    print(f"Recall:    {recall_score(y_test, y_pred):.4f}")
+    print(f"F1-score:  {f1_score(y_test, y_pred):.4f}")
+    print(f"\nMatriz de confusión:")
+    print(confusion_matrix(y_test, y_pred))
+
+evaluate_model(pipe_lr, X_test, y_test, "Regresión Logística")
+evaluate_model(pipe_rf, X_test, y_test, "Random Forest")
+\end{lstlisting}
+
+
+\chapter{Repositorio del proyecto}
+\label{anexo:repositorio}
+
+Todo el código fuente del proyecto, incluyendo los notebooks de Jupyter, los datos procesados (sin información sensible), las figuras generadas y los modelos entrenados, está disponible en un repositorio público de GitHub:
+
+\begin{center}
+\large
+\textbf{Repositorio del trabajo en GitHub:}
+
+\url{https://github.com/IsaCristancho/TFG_AKI_Prediction}
+\end{center}
+
+\section{Estructura del repositorio}
+
+El repositorio está organizado de la siguiente manera:
+
+\begin{verbatim}
+TFG_AKI_Prediction/
+├── notebooks/
+│   ├── 01_data_exploration.ipynb
+│   ├── 02_data_cleaning.ipynb
+│   ├── 03_feature_engineering.ipynb
+│   ├── 04_dataset_creation.ipynb
+│   ├── 05_model_training.ipynb
+│   ├── 06_model_evaluation.ipynb
+│   ├── 07_model_interpretation.ipynb
+│   └── 08_demo_prediction.ipynb
+├── data/
+│   ├── raw/           # Datos originales (anonimizados)
+│   └── processed/     # Datasets procesados
+├── figures/           # Figuras generadas
+├── models/            # Modelos serializados (.joblib)
+├── results/           # Resultados y métricas
+├── PlantillaTFG.tex   # Plantilla desarrollo TFG en LaTex
+└── README.md          # Documentación del proyecto
+\end{verbatim}
+
+\section{Reproducibilidad}
+
+Para reproducir el análisis:
+
+\begin{enumerate}
+    \item Clonar el repositorio: \texttt{git clone https://github.com/IsaCristancho/TFG\_AKI\_Prediction.git}
+    \item Crear un entorno virtual de Python 3.10+
+    \item Instalar las dependencias: \texttt{pip install -r requirements.txt}
+    \item Ejecutar los notebooks en orden numérico
+\end{enumerate}
+
+\textbf{Nota}: Los datos originales no están incluidos en el repositorio por razones de confidencialidad. Los notebooks pueden ejecutarse con los datasets procesados disponibles en \texttt{data/processed/}.
+
+\section{Dependencias principales}
+
+\begin{itemize}
+    \item Python 3.10+
+    \item pandas 2.0+
+    \item numpy 1.24+
+    \item scikit-learn 1.3+
+    \item matplotlib 3.7+
+    \item seaborn 0.12+
+    \item joblib 1.3+
+\end{itemize}
 
 \end{document}
